@@ -19,3 +19,5 @@ def load(split: Union[str, int, None] = None) -> Union[pd.DataFrame, Tuple[pd.Da
         return df_full.loc[[entries[str(idx)] for idx in splits['trn']]]
     elif split == 'eval':
         return df_full.loc[[entries[str(idx)] for idx in splits['evl']]]
+    elif split == 'heldout':
+        return df_full.loc[[entries[str(idx)] for idx in splits['tst']]]

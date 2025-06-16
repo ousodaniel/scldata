@@ -4,7 +4,7 @@
   "2": "Membrane",
   "3": "Lysosome/vacuole",
   "4": "Mitochondrion",
-  "5": "Secreted",
+  "5": "Secreted"
   "6": "Peroxisome",
   "7": "Plastid",
   "8": "Golgi apparatus",
@@ -15,19 +15,19 @@
   "13": "Cytoplasm;Cytoskeleton"
 },
   "label_to_index": {
-    "Cytoplasm": "0",
-    "Nucleus": "1",
-    "Membrane": "2",
-    "Lysosome/vacuole": "3",
-    "Mitochondrion": "4",
-    "Secreted": "5",
-    "Peroxisome": "6",
-    "Plastid": "7",
-    "Golgi apparatus": "8",
-    "ER": "9",
-    "Cytoplasm;Nucleus": "10",
-    "Centrosome;Cytoplasm;Cytoskeleton;Microtubule organizing center": "11",
-    "Cytoplasm;Membrane": "12",
-    "Cytoplasm;Cytoskeleton": "13"
+    "Cytoplasm": 0,
+    "Nucleus": 1,
+    "Membrane": 2,
+    "Lysosome/vacuole": 3,
+    "Mitochondrion": 4,
+    "Secreted": 5,
+    "Peroxisome": 6,
+    "Plastid": 7,
+    "Golgi apparatus": 8,
+    "ER": 9,
+    "Cytoplasm;Nucleus": 10,
+    "Centrosome;Cytoplasm;Cytoskeleton;Microtubule organizing center": 11,
+    "Cytoplasm;Membrane": 12,
+    "Cytoplasm;Cytoskeleton": 13
   }
 }

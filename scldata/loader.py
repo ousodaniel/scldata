@@ -56,8 +56,11 @@ def load(split: Union[str, int, None] = None) -> Union[pd.DataFrame, Tuple[pd.Da
 
     df_full = pd.read_csv('data/scl2205.csv', index_col='entry')
 
+    with open('data/labels.json', 'r') as f:
+        labels = json.load(f)
+
     if split is None or split == 'full':
-        return df_full
+        return df_full.replace(labels)
 
     with open('data/splits.json', 'r') as f:
         splits = json.load(f)
@@ -66,14 +69,14 @@ def load(split: Union[str, int, None] = None) -> Union[pd.DataFrame, Tuple[pd.Da
         entries = json.load(f)
 
     if split == 'train':
-        return df_full.loc[[entries[str(idx)] for idx in splits['trn']]]
+        return df_full.loc[[entries[str(idx)] for idx in splits['trn']]].replace(labels)
     elif split == 'eval':
-        return df_full.loc[[entries[str(idx)] for idx in splits['evl']]]
+        return df_full.loc[[entries[str(idx)] for idx in splits['evl']]].replace(labels)
     elif split == 'heldout':
-        return df_full.loc[[entries[str(idx)] for idx in splits['tst']]]
+        return df_full.loc[[entries[str(idx)] for idx in splits['tst']]].replace(labels)
     elif (isinstance(split, int) or int(split)) and int(split) in range(5):
         k = int(split)
-        return (df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['trn']]],
-                df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['tst']]])
+        return (df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['trn']]].replace(labels),
+                df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['tst']]].replace(labels))
     else:
         raise ValueError('split must be either None, "full", "train", "eval", "heldout" or an integer(-string) representing a k-fold split, eg. 0 0r "0"')

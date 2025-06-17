@@ -32,9 +32,6 @@ def load(split: Union[str, int, None] = None) -> Union[pd.DataFrame, Tuple[pd.Da
 
     Descriptions
     -----
-
-    SCL2205
-        The dataset name: SubCellularLocalisation and 2205 represents the UniProtKB release year (YY) and month (M).
     full : str
         The complete, unsplit SCL2205 dataset.
     train : str
@@ -47,22 +44,6 @@ def load(split: Union[str, int, None] = None) -> Union[pd.DataFrame, Tuple[pd.Da
         The value of the "split" param specifying a fold split of the SCL2205 dataset in the k-fold cross-validation model development approach. An integer string may be provided.
 
     .. _UniProtKB: `https://uniprot.org/`
-
-    Citations
-    ---------
-
-    Examples
-    --------
-    >>> import scldata as sd # or from scldata.loader import load or from scldata import load
-    >>> df_full = sd.load("full")
-    >>> df_full = sd.load()
-    >>> df_train = sd.load("train")
-    >>> df_eval = sd.load("eval")
-    >>> df_heldout = sd.load("heldout")
-    >>> df_kfold0 = sd.load(0) # retuns a tuple of dataframes with training and testing sets at index 0 and 1, respectively
-    >>> df_kfold0 = sd.load("0")
-
-    .. note:: The SCL2205 dataset was curated from `UniProtKB`_, the latest release as of 24/01/2023. The indices are persistent identifiers consistent with *UniProtKB entry* identifier.
 
     """
 

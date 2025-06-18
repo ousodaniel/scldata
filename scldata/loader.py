@@ -1,9 +1,10 @@
+import argparse
 import json
 import pandas as pd
 from typing import Tuple, Union
 from pathlib import Path
 
-_DATA_DIR = Path(__file__).parent/"data"
+_DATA_DIR = Path(__file__).parent/'data'
 
 with open(f'{_DATA_DIR}/labels.json', 'r') as f:
     labels = json.load(f)
@@ -43,8 +44,6 @@ def load(split: Union[str, int, None] = None) -> Union[pd.DataFrame, Tuple[pd.Da
     k : int | str
         The value of the "split" param specifying a fold split of the SCL2205 dataset in the k-fold cross-validation model development approach. An integer string may be provided.
 
-    .. _UniProtKB: `https://uniprot.org/`
-
     """
 
     df_full = pd.read_csv(f'{_DATA_DIR}/scl2205.csv', index_col='entry')
@@ -63,3 +62,79 @@ def load(split: Union[str, int, None] = None) -> Union[pd.DataFrame, Tuple[pd.Da
                 df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['tst']]].replace(labels['index_to_label']))
     else:
         raise ValueError('split must be either None, "full", "train", "eval", "heldout" or an integer(-string) representing a k-fold split, eg. 0 0r "0"')
+
+def main():
+    parser = argparse.ArgumentParser(prog='scldata',
+                                     description='SCL2205 dataset loading to standard output. With no OPTION(s), output the HEAD of the full SCL2205 dataset.',
+                                     usage='%(prog)s [OPTION(s)]\nusage: %(prog)s [-h] [-s SPLIT] [-f FORMAT] [--scls]',
+                                     epilog=(
+                                         '\n'
+                                         'Descriptions:\n'
+                                         '  full : str\n'
+                                         '    The complete, unsplit SCL2205 dataset.\n'
+                                         '  train : str\n'
+                                         '    The part of SCL2205 used for model training in the *train-eval-test* model development approach.\n'
+                                         '  eval : str\n'
+                                         '    The part of SCL2205 used for model evaluation during training in the *train-eval-test* model development approach.\n'
+                                         '  heldout : str\n'
+                                         '    The part of SCL2205 used only for the **final** (internal) model testing.\n'
+                                         '  k : int | str\n'
+                                         '    The value of the "split" param specifying a fold split of the SCL2205 dataset in the k-fold cross-validation model development approach. An integer string may be provided.\n'
+                                         '\n'
+                                         'Examples:\n'
+                                         '  scldata -h\n'
+                                         '  scldata --split heldout\n'
+                                         '\n'
+                                         'Homepage: https://github.com/ousodaniel/scldata\n'
+                                         'Repository: https://github.com/ousodaniel/scldata.git\n'
+                                         'Bug Tracker: https://github.com/ousodaniel/scldata/issues\n'
+                                         '\n'
+                                         'Maintainer: Ouso D. O. S. daniel.ouso[at]ucdconnect.ie'
+                                     ),
+                                     formatter_class=argparse.RawDescriptionHelpFormatter,)
+    parser.add_argument(
+        '-s', '--split',
+        type=str,
+        default='full',
+        choices=['train', 'eval', 'heldout', 'full', '0', '1', '2', '3', '4'],
+        help='which split to load: "train", "eval", "heldout", "full", or k-fold ("0"-"4").'
+    )
+    parser.add_argument(
+        '-f', '--format',
+        type=str,
+        choices=['head', 'shape', 'all'],
+        default='head',
+        help='print format: "head", "shape", or "all" (default: "head")'
+    )
+    parser.add_argument(
+        '-c', '--scls',
+        action='store_true',
+        help='print target classes'
+    )
+    args = parser.parse_args()
+
+    if args.scls:
+        print('SCL2205 Target Classes:\n\n', '\n'.join(load(args.split).scl.unique()), sep='')
+    elif args.format == 'all':
+        if args.split not in ('0', '1', '2', '3', '4'):
+            print(load(args.split).to_string())
+        else:
+            print(f'{load(args.split)[0].to_string()}', end='#')
+            print(f'{load(args.split)[1].to_string()}')
+    elif args.format == 'head':
+        if args.split not in ('0', '1', '2', '3', '4'):
+            print(f'SCL2205 {args.split.capitalize()} (Head):\n{load(args.split).head()}')
+        else:
+            print(f'SCL2205 Fold-{args.split} Train (Head):\n{load(args.split)[0].head()}', end='\n\n\n')
+            print(f'SCL2205 Fold-{args.split} Test (Head):\n{load(args.split)[1].head()}')
+
+    elif args.format == 'shape':
+        if args.split not in ('0', '1', '2', '3', '4'):
+            print(f'SCL2205 {args.split.capitalize()} Shape:\n{load(args.split).shape()}')
+        else:
+            print(f'SCL2205 Fold-{args.split} Train Shape:\n{load(args.split)[0].shape()}', end='\n\n\n')
+            print(f'SCL2205 Fold-{args.split} Test Shape:\n{load(args.split)[1].shape()}')
+        print(load(args.split).head())
+
+if __name__ == '__main__':
+    main()

@@ -9,9 +9,9 @@ maintainers = [
   {name = "Ouso D. O. S.", email = "daniel.ouso@ucdconnect.ie"}
 ]
 readme = "README.md"
-requires-python = "~=3.10"
+requires-python = ">=3.8"
 dependencies = [
-    "pandas>=2.3.0",
+    "pandas",
 ]
 license = "MIT"
 keywords = ["subcellular localisation", "machine learning", "dataset", "clustering", "classification", "natural language processing"]

@@ -27,3 +27,5 @@
     .. _UniProtKB: `https://uniprot.org/`
 
 """
+from importlib.metadata import version
+__version__ = version('scldata')

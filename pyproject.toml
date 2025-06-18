@@ -37,9 +37,9 @@ exclude = [
 ]
 
 [tool.hatch.build.targets.sdist]
-packages = ["scldata"]
+packages = ["scldata", "tests"]
 [tool.hatch.build.targets.wheel]
-packages = ["scldata"]
+packages = ["scldata", "tests"]
 
 classifiers = [
     "Development Status :: 3 - Alpha",

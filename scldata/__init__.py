@@ -13,19 +13,17 @@
 
     Examples
     --------
-    >>> import scldata as sd # or from scldata.loader import load or from scldata import load
-    >>> df_full = sd.load("full")
-    >>> df_full = sd.load()
-    >>> df_train = sd.load("train")
-    >>> df_eval = sd.load("eval")
-    >>> df_heldout = sd.load("heldout")
-    >>> df_kfold0 = sd.load(0) # retuns a tuple of dataframes with training and testing sets at index 0 and 1, respectively
-    >>> df_kfold1_train = sd.load("1")[0]
+    >>> import scldata.loader as sdl # or from scldata.loader import load or from scldata import load
+    >>> df_full = sdl.load("full")
+    >>> df_full = sdl.load()
+    >>> df_train = sdl.load("train")
+    >>> df_eval = sdl.load("eval")
+    >>> df_heldout = sdl.load("heldout")
+    >>> df_kfold0 = sdl.load(0) # retuns a tuple of dataframes with training and testing sets at index 0 and 1, respectively
+    >>> df_kfold1_train = sdl.load("1")[0]
 
     .. note:: The SCL2205 dataset was curated from `UniProtKB`_, the latest release as of 24/01/2023. The indices are persistent identifiers consistent with *UniProtKB entry* identifier.
 
+    .. _UniProtKB: `https://uniprot.org/`
+
 """
-
-from .loader import load
-
-__all__ = ["load"]

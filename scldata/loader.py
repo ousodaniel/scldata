@@ -56,7 +56,7 @@ def load(split: Union[str, int, None] = None) -> Union[pd.DataFrame, Tuple[pd.Da
         return df_full.loc[[entries[str(idx)] for idx in splits['evl']]].replace(labels['index_to_label'])
     elif split == 'heldout':
         return df_full.loc[[entries[str(idx)] for idx in splits['tst']]].replace(labels['index_to_label'])
-    elif (isinstance(split, int) or int(split)) and int(split) in range(5):
+    elif (isinstance(split, int) or isinstance(int(split), int)) and int(split) in range(5):
         k = int(split)
         return (df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['trn']]].replace(labels['index_to_label']),
                 df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['tst']]].replace(labels['index_to_label']))

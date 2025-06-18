@@ -20,6 +20,9 @@ Homepage = "https://github.com/ousodaniel/scldata"
 Repository = "https://github.com/ousodaniel/scldata.git"
 "Bug Tracker" = "https://github.com/ousodaniel/scldata/issues"
 
+[project.gui-scripts]
+scldata = "scldata.loader:main"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -30,8 +33,13 @@ include = [
 ]
 exclude = [
     ".gitignore",
-    ".hgignore"
+    ".hgignore",
 ]
+
+[tool.hatch.build.targets.sdist]
+packages = ["scldata"]
+[tool.hatch.build.targets.wheel]
+packages = ["scldata"]
 
 classifiers = [
     "Development Status :: 3 - Alpha",

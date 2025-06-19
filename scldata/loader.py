@@ -114,7 +114,7 @@ def main():
     args = parser.parse_args()
 
     if args.scls:
-        print('SCL2205 Target Classes:\n\n', '\n'.join(load(args.split).scl.unique()), sep='')
+        print('SCL2205 Target Classes:\n\n', '\n'.join(load().scl.unique()), sep='')
     elif args.format == 'all':
         if args.split not in ('0', '1', '2', '3', '4'):
             print(load(args.split).to_string())

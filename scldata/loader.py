@@ -49,17 +49,17 @@ def load(split: Union[str, int, None] = None) -> Union[pd.DataFrame, Tuple[pd.Da
     df_full = pd.read_csv(f'{_DATA_DIR}/scl2205.csv', index_col='entry')
 
     if split is None or split == 'full':
-        return df_full.replace(labels['index_to_label'])
+        return df_full.replace({int(k): v for k, v in labels['index_to_label'].items()})
     elif split == 'train':
-        return df_full.loc[[entries[str(idx)] for idx in splits['trn']]].replace(labels['index_to_label'])
+        return df_full.loc[[entries[str(idx)] for idx in splits['trn']]].replace({int(k): v for k, v in labels['index_to_label'].items()})
     elif split == 'eval':
-        return df_full.loc[[entries[str(idx)] for idx in splits['evl']]].replace(labels['index_to_label'])
+        return df_full.loc[[entries[str(idx)] for idx in splits['evl']]].replace({int(k): v for k, v in labels['index_to_label'].items()})
     elif split == 'heldout':
-        return df_full.loc[[entries[str(idx)] for idx in splits['tst']]].replace(labels['index_to_label'])
+        return df_full.loc[[entries[str(idx)] for idx in splits['tst']]].replace({int(k): v for k, v in labels['index_to_label'].items()})
     elif (isinstance(split, int) or isinstance(int(split), int)) and int(split) in range(5):
         k = int(split)
-        return (df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['trn']]].replace(labels['index_to_label']),
-                df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['tst']]].replace(labels['index_to_label']))
+        return (df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['trn']]].replace({int(k): v for k, v in labels['index_to_label'].items()}),
+                df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['tst']]].replace({int(k): v for k, v in labels['index_to_label'].items()}))
     else:
         raise ValueError('split must be either None, "full", "train", "eval", "heldout" or an integer(-string) representing a k-fold split, eg. 0 0r "0"')
 

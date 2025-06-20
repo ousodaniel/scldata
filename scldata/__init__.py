@@ -33,7 +33,7 @@ import argparse
 from importlib.metadata import version
 from scldata.loader import load
 
-__version__ = version('scldata')
+__version__ = version('p-scldata')
 
 
 def main():

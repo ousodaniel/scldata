@@ -1,6 +1,6 @@
 [project]
 name = "p-scldata"
-version = "2025.6a1"
+version = "2025.6a2"
 description = "A dataset (SCL2205) for subcellular localisation prediction modelling"
 authors = [{ name = "Ouso D. O. S.", email = "daniel.ouso@ucdconnect.ie" },
     {email = "ousodaniel@gmail.com"}

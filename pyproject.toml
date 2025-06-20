@@ -21,7 +21,7 @@ Repository = "https://github.com/ousodaniel/scldata.git"
 "Bug Tracker" = "https://github.com/ousodaniel/scldata/issues"
 
 [project.gui-scripts]
-scldata = "scldata.loader:main"
+scldata = "scldata.__init__:main"
 
 [build-system]
 requires = ["hatchling"]

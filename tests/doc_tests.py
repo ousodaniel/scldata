@@ -1,5 +1,4 @@
 import doctest
-import sys
 import scldata as sd
 
 def main():

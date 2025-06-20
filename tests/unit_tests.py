@@ -7,7 +7,8 @@ from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
-from scldata.loader import load, main
+from scldata.loader import load
+from scldata.__init__ import main
 
 class TestScldataPkg(unittest.TestCase):
 
@@ -20,8 +21,8 @@ class TestScldataPkg(unittest.TestCase):
         self.assertTrue(callable(getattr(loader, 'load', None)))
 
     def test_import_submodule_main(self):
-        from scldata import loader
-        self.assertTrue(callable(getattr(loader, 'main', None)))
+        from scldata import __init__
+        self.assertTrue(callable(getattr(__init__, 'main', None)))
 
     def test_load_kfold_input(self):
         self.assertRaises(ValueError, load, 5)
@@ -32,7 +33,7 @@ class TestScldataPkg(unittest.TestCase):
         self.assertEqual(len(train_test), 2, 'Fold loading not returning train and test sets')
 
     def test_main_returns_none(self):
-        from scldata.loader import  main
+        from scldata.__init__ import  main
         self.assertIsNone(main(), 'Main function should return None')
 
     def test_main_output(self):
@@ -80,7 +81,7 @@ class TestScldataCli(unittest.TestCase):
         self.assertEqual(expected_output.strip(), output.strip(), f'Expected 13 Classes:\n{expected_output}')
 
     def test_cli_execution(self):
-        script_path = self.project_root / 'scldata' / 'loader.py'
+        script_path = self.project_root / 'scldata' / '__init__.py'
         result = subprocess.run(
             [sys.executable, script_path],
             stdout=subprocess.PIPE,

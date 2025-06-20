@@ -1,7 +1,9 @@
 """
     A dataset (SCL2205) package for subcellular localisation prediction modelling.
-    Its use cases include clustering and classification machine learning, and contain dataset tracks for the *train-eval-test* and *cross-validation-test* (*k* = 5) model development approaches.
+    Its use cases include clustering and classification machine learning, and contain dataset tracks for the *train-eval-test* and *cross-validation-test* (`k` = 5) model development approaches.
     Preprocessing is already done, including homology reduction within and across corresponding splits.
+
+    The package also has a command line interface with additional capabilities: use the command `scldata`. Without any options, it prints out an equivalent of `DataFrame.head()`.
 
     Descriptions
     ------------

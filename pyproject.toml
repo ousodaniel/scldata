@@ -32,14 +32,15 @@ include = [
   "scldata/data/*"
 ]
 exclude = [
+    "/tests",
     ".gitignore",
     ".hgignore",
 ]
 
 [tool.hatch.build.targets.sdist]
-packages = ["scldata", "tests"]
+packages = ["scldata"]
 [tool.hatch.build.targets.wheel]
-packages = ["scldata", "tests"]
+packages = ["scldata"]
 
 classifiers = [
     "Development Status :: 3 - Alpha",

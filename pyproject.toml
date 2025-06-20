@@ -29,7 +29,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build]
 include = [
-  "scldata/data"
+  "scldata/data/*"
 ]
 exclude = [
     ".gitignore",

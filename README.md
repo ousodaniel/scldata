@@ -80,7 +80,7 @@ splits
 
 ## Code/software
 
-An open-source Python data package, `scldata`, was developed to provide convenient access to the dataset. It is available on the official Python Package Index (PyPI). Upon installation, the dataset is automatically downloaded, and users can preview the data or load specific partitions programmatically (in the command line or as an import). The package is under active development, with additional features planned for future releases.
+An open-source Python data package, `p-scldata`, was developed to provide convenient access to the dataset. It is available on the official Python Package Index (PyPI). Upon installation, the dataset is automatically downloaded, and users can preview the data or load specific partitions programmatically (in the command line or as an import). The package is under active development, with additional features planned for future releases.
 
 ## Access information
 

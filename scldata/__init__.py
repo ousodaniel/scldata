@@ -38,8 +38,8 @@ __version__ = version('scldata')
 
 def main():
     parser = argparse.ArgumentParser(prog='scldata',
-                                     description='SCL2205 dataset loading to standard output. With no OPTION(s), output the HEAD of the full SCL2205 dataset.',
-                                     usage='%(prog)s [OPTION(s)]\nusage: %(prog)s [-h] [-s SPLIT] [-f FORMAT] [--scls]',
+                                     description='SCL2205 dataset loading to standard output. With no OPTION(s), outputs the HEAD of the full SCL2205 dataset.',
+                                     usage='%(prog)s [OPTIONS]\nusage: %(prog)s [-h] [-s SPLIT] [-f FORMAT] [--scls] [--version]',
                                      epilog=(
                                          '\n'
                                          'Descriptions:\n'

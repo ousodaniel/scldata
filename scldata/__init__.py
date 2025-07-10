@@ -108,10 +108,10 @@ def main():
 
     elif args.format == 'shape':
         if args.split not in ('0', '1', '2', '3', '4'):
-            print(f'SCL2205 {args.split.capitalize()} Shape:\n{load(args.split).shape()}')
+            print(f'SCL2205 {args.split.capitalize()} Shape:\n{load(args.split).shape}')
         else:
-            print(f'SCL2205 Fold-{args.split} Train Shape:\n{load(args.split)[0].shape()}', end='\n\n\n')
-            print(f'SCL2205 Fold-{args.split} Test Shape:\n{load(args.split)[1].shape()}')
+            print(f'SCL2205 Fold-{args.split} Train Shape:\n{load(args.split)[0].shape}', end='\n\n\n')
+            print(f'SCL2205 Fold-{args.split} Test Shape:\n{load(args.split)[1].shape}')
         print(load(args.split).head())
 
 if __name__ == '__main__':

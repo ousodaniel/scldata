@@ -1,13 +1,33 @@
 # SCL2205: Subcellular Localisation Dataset
 An installable dataset package for subcellular localisation prediction modelling.
-It is suitable for clustering and classification machine learning, and contains dataset tracks for the *train-eval-test* and *cross-validation-test* (*k* = 5) model development approaches.
+It is suitable for clustering, classification, and generative protein language machine learning, and comprises dataset tracks for the `train-eval-test` and `cross-validation-test` (`k = 5`) model development approaches.
 Preprocessing is already done, including homology reduction within and across corresponding splits.
+Motivated by the `F.A.I.R` principle.
 
-**Interface:** Python package and CLI
+**Interface:** `Python` package with `CLI`
 
-**Description:** 13-class subcellular localisation data (scldata)
+**Installation:**
 
-**Structure:** unarchived and decompressed
+*Package manager:* `pip install p-scldata`. Available as `scldata` after installation
+
+
+**Example usage:**
+```
+# Python
+>>> import scldata.loader as sdl # load pkg
+>>> df_full = sdl.load() # default, the full dataset
+>>> df_train = sdl.load("train") # returns the training split
+
+# CLI
+$ scldata # default, returns the first 5 records of the full dataset preceeded by a short descriptive line and the column and index names
+$ scdata --split train # similar as prevoius line but for the training  split
+$ scdata --split train --format full # returns the full training split preceeded by the three infomational lines
+$ scldata --help # for other options
+```
+
+**Description:** This dataset comprises 19074 protein sequences (`col 1`) and corresponding subcellular localisation labels (`col 2`), covering 13 classes (nine single-location and four multi-location classes). `col 1` serves as the predictor (`input`), while `col 2` is the target (`output`)
+
+**Structure:** unarchived and decompressed folder layout
 
 ```
 scldata
@@ -28,28 +48,28 @@ scldata
    * Column 2: Subcellular location (Y variable); name `scl`
 4. ***splits.json***
    * Abbreviations
-     * **cv**: cross-validation (the 5-fold cross-validation dataset)
-     * **f*k***: fold `k`, *k* ranges from zero to five
-     * **trn**: training split
-     * **tst**:
-       * in **cv** is similar to the **evl** split
-       * at the top level, it is the ***heldout*** validation set
-     * **evl**: evaluation split (for monitoring training)
+     * `cv`: cross-validation (the 5-fold cross-validation dataset)
+     * `fk`: fold `k`; ranges from zero to five
+     * `trn`: training split
+     * `tst`:
+       * in `cv` is similar to the `evl` split
+       * at the top level, it is the `heldout` validation set
+     * `evl`: evaluation split (for monitoring training)
      * `[<int index>, ...]`: list of integer indices representing partition members
 5. **Classes:**
-   1. Cytoplasm (CYT)
-   2. Plastid (PLA)
-   3. Secreted (SEC)
-   4. Mitochondrion (MIT)
-   5. Membrane (MEM)
-   6. Peroxisome (PER)
-   7. Nucleus (NUC)
-   8. Cell projection (CEP)
-   9. ER (ER)
-   10. Cytoplasm;Nucleus (CYT;NUC)
-   11. Centrosome;Cytoplasm;Cytoskeleton;Microtubule organizing center (CEN;CYT;CYTS;MTOC)
-   12. Cytoplasm;Membrane (CYT;MEM)
-   13. Cytoplasm;Cytoskeleton (CYT;CYTS)
+   1. Cytoplasm (`CYT`)
+   2. Plastid (`PLA`)
+   3. Secreted (`SEC`)
+   4. Mitochondrion (`MIT`)
+   5. Membrane (`MEM`)
+   6. Peroxisome (`PER`)
+   7. Nucleus (`NUC`)
+   8. Cell projection (`CEP`)
+   9. ER (`ER`)
+   10. Cytoplasm;Nucleus (`CYT;NUC`)
+   11. Centrosome;Cytoplasm;Cytoskeleton;Microtubule organizing center (`CEN;CYT;CYTS;MTOC`)
+   12. Cytoplasm;Membrane (`CYT;MEM`)
+   13. Cytoplasm;Cytoskeleton (`CYT;CYTS`)
 
 ```
 splits

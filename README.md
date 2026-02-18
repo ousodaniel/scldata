@@ -1,6 +1,6 @@
 # SCL2205: Subcellular Localisation Dataset
 An installable dataset package for subcellular localisation prediction modelling.
-It is suitable for clustering, classification, and generative protein language machine learning, and comprises dataset tracks for the `train-eval-test` and `cross-validation-test` (`k = 5`) model development approaches.
+It is suitable for clustering, classification, and generative protein language machine learning, and comprises dataset tracks for the `train-valid-test` and `cross-validation-test` (`k = 5`) model development approaches.
 Preprocessing is already done, including homology reduction within and across corresponding splits.
 Motivated by the `F.A.I.R` principle.
 
@@ -43,18 +43,18 @@ scldata
 1. ***entries.json***: `key=value` pairs; `key` is integer index, `value` is UniProtKB unique identifier.
 2. ***labels.json***: nested `key=value` pairs;  `key` is integer index, `value` is subcellular location for the `index_to_label` key-index, and vice versa for the `label_to_index` key-index.
 3. ***scl2205.csv***:
-   * Column 0: Table index; name, `entry`
-   * Column 1: Protein sequence (X variable); name, `seq`
-   * Column 2: Subcellular location (Y variable); name `scl`
+   * Column 0: Table index; name, `entry`; type `str`
+   * Column 1: Protein sequence (X variable); name, `seq`; type `str`
+   * Column 2: Subcellular location (Y variable); name `scl`; type `str`
 4. ***splits.json***
    * Abbreviations
      * `cv`: cross-validation (the 5-fold cross-validation dataset)
-     * `fk`: fold `k`; ranges from zero to five
+     * `fk`: fold `k`; ranges from zero to four
      * `trn`: training split
      * `tst`:
-       * in `cv` is similar to the `evl` split
+       * in `cv` is similar to the `vld` split
        * at the top level, it is the `heldout` validation set
-     * `evl`: evaluation split (for monitoring training)
+     * `vld`: validation split (for monitoring training)
      * `[<int index>, ...]`: list of integer indices representing partition members
 5. **Classes:**
    1. Cytoplasm (`CYT`)
@@ -89,7 +89,7 @@ splits
 │   └── f4
 │       ├── trn = [<int index>, ...] # counts: 15265
 │       └── tst = [<int index>, ...] # counts: 1178
-├── evl = [<int index>, ...] # counts: 15183
+├── vld = [<int index>, ...] # counts: 15183
 ├── trn = [<int index>, ...] # counts: 1260
 └── tst = [<int index>, ...] # counts: 2631
 ```

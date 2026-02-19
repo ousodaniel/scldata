@@ -23,7 +23,7 @@ def load(split: Union[str, int, None] = None) -> Union[pd.DataFrame, Tuple[pd.Da
     ----------
     `split`: `str` | `int`, optional
 
-    :param split: `str` or `int` or `None`. If `str`, it can be either of "full", "train", "eval", "heldout". Integers can be provided in string form.
+    :param split: `str` or `int` or `None`. If `str`, it can be either of "full", "train", "valid", "heldout". Integers can be provided in string form.
 
     Returns
     -------
@@ -36,9 +36,9 @@ def load(split: Union[str, int, None] = None) -> Union[pd.DataFrame, Tuple[pd.Da
     full : str
         The complete, unsplit SCL2205 dataset.
     train : str
-        The part of SCL2205 used for model training in the *train-eval-test* model development approach.
-    eval : str
-        The part of SCL2205 used for model evaluation during training in the *train-eval-test* model development approach.
+        The part of SCL2205 used for model training in the *train-valid-test* model development approach.
+    valid : str
+        The part of SCL2205 used for model evaluation during training in the *train-valid-test* model development approach.
     heldout : str
         The part of SCL2205 used only for the **final** (internal) model testing.
     k : int | str
@@ -52,8 +52,8 @@ def load(split: Union[str, int, None] = None) -> Union[pd.DataFrame, Tuple[pd.Da
         return df_full.replace({int(k): v for k, v in labels['index_to_label'].items()})
     elif split == 'train':
         return df_full.loc[[entries[str(idx)] for idx in splits['trn']]].replace({int(k): v for k, v in labels['index_to_label'].items()})
-    elif split == 'eval':
-        return df_full.loc[[entries[str(idx)] for idx in splits['evl']]].replace({int(k): v for k, v in labels['index_to_label'].items()})
+    elif split == 'valid':
+        return df_full.loc[[entries[str(idx)] for idx in splits['vld']]].replace({int(k): v for k, v in labels['index_to_label'].items()})
     elif split == 'heldout':
         return df_full.loc[[entries[str(idx)] for idx in splits['tst']]].replace({int(k): v for k, v in labels['index_to_label'].items()})
     elif (isinstance(split, int) or isinstance(int(split), int)) and int(split) in range(5):
@@ -61,7 +61,7 @@ def load(split: Union[str, int, None] = None) -> Union[pd.DataFrame, Tuple[pd.Da
         return (df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['trn']]].replace({int(k): v for k, v in labels['index_to_label'].items()}),
                 df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['tst']]].replace({int(k): v for k, v in labels['index_to_label'].items()}))
     else:
-        raise ValueError('split must be either None, "full", "train", "eval", "heldout" or an integer(-string) representing a k-fold split, eg. 0 0r "0"')
+        raise ValueError('split must be either None, "full", "train", "valid", "heldout" or an integer(-string) representing a k-fold split, eg. 0 0r "0"')
 
 def main():
     pass

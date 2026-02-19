@@ -21,7 +21,7 @@ Repository = "https://github.com/ousodaniel/scldata.git"
 "Bug Tracker" = "https://github.com/ousodaniel/scldata/issues"
 
 [project.gui-scripts]
-scldata = "scldata.__init__:main"
+scldata = "src/scldata.__init__:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -29,19 +29,22 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build]
 include = [
-    "scldata/data/*",
+    "src/scldata/data/*",
     "CHANGELOG.md"
 ]
 exclude = [
     "/tests",
+    "/scripts",
+    "/notebooks",
+    "/data",
     ".gitignore",
     ".hgignore",
 ]
 
 [tool.hatch.build.targets.sdist]
-packages = ["scldata"]
+packages = ["src/scldata"]
 [tool.hatch.build.targets.wheel]
-packages = ["scldata"]
+packages = ["src/scldata"]
 
 classifiers = [
     "Development Status :: 3 - Alpha",

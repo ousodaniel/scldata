@@ -1,5 +1,6 @@
 import doctest
-import scldata as sd
+from src import scldata as sd
+
 
 def main():
     doctest.testmod(sd, verbose=True)

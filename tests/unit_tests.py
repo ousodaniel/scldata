@@ -7,21 +7,21 @@ from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
-from scldata.loader import load
-from scldata.__init__ import main
+from src.scldata.loader import load
+from src.scldata import main, loader
+
 
 class TestScldataPkg(unittest.TestCase):
 
     def test_import_package(self):
-        import scldata
+        from src import scldata
         self.assertTrue(hasattr(scldata, '__version__'))
 
     def test_import_submodule_load(self):
-        from scldata import loader
         self.assertTrue(callable(getattr(loader, 'load', None)))
 
     def test_import_submodule_main(self):
-        from scldata import __init__
+        from src.scldata import __init__
         self.assertTrue(callable(getattr(__init__, 'main', None)))
 
     def test_load_kfold_input(self):
@@ -33,7 +33,7 @@ class TestScldataPkg(unittest.TestCase):
         self.assertEqual(len(train_test), 2, 'Fold loading not returning train and test sets')
 
     def test_main_returns_none(self):
-        from scldata.__init__ import  main
+        from src.scldata import  main
         self.assertIsNone(main(), 'Main function should return None')
 
     def test_main_output(self):

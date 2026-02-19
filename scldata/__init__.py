@@ -1,6 +1,6 @@
 """
     A dataset (SCL2205) package for subcellular localisation prediction modelling.
-    Its use cases include clustering and classification machine learning, and contain dataset tracks for the *train-eval-test* and *cross-validation-test* (`k` = 5) model development approaches.
+    Its use cases include clustering and classification machine learning, and contain dataset tracks for the *train-valid-test* and *cross-validation-test* (`k` = 5) model development approaches.
     Preprocessing is already done, including homology reduction within and across corresponding splits.
 
     The package also has a command line interface with additional capabilities: use the command `scldata`. Without any options, it prints out an equivalent of `DataFrame.head()`.
@@ -19,7 +19,7 @@
     >>> df_full = sdl.load("full")
     >>> df_full = sdl.load()
     >>> df_train = sdl.load("train")
-    >>> df_eval = sdl.load("eval")
+    >>> df_eval = sdl.load("valid")
     >>> df_heldout = sdl.load("heldout")
     >>> df_kfold0 = sdl.load(0) # retuns a tuple of dataframes with training and testing sets at index 0 and 1, respectively
     >>> df_kfold1_train = sdl.load("1")[0]
@@ -46,9 +46,9 @@ def main():
                                          '  full : str\n'
                                          '    The complete, unsplit SCL2205 dataset.\n'
                                          '  train : str\n'
-                                         '    The part of SCL2205 used for model training in the *train-eval-test* model development approach.\n'
-                                         '  eval : str\n'
-                                         '    The part of SCL2205 used for model evaluation during training in the *train-eval-test* model development approach.\n'
+                                         '    The part of SCL2205 used for model training in the *train-valid-test* model development approach.\n'
+                                         '  valid : str\n'
+                                         '    The part of SCL2205 used for model evaluation during training in the *train-valid-test* model development approach.\n'
                                          '  heldout : str\n'
                                          '    The part of SCL2205 used only for the **final** (internal) model testing.\n'
                                          '  k : int | str\n'
@@ -69,8 +69,8 @@ def main():
         '-s', '--split',
         type=str,
         default='full',
-        choices=['train', 'eval', 'heldout', 'full', '0', '1', '2', '3', '4'],
-        help='which split to load: "train", "eval", "heldout", "full", or k-fold ("0"-"4").'
+        choices=['train', 'valid', 'heldout', 'full', '0', '1', '2', '3', '4'],
+        help='which split to load: "train", "valid", "heldout", "full", or k-fold ("0"-"4").'
     )
     parser.add_argument(
         '-f', '--format',

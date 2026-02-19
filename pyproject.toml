@@ -14,7 +14,7 @@ dependencies = [
     "pandas",
 ]
 license = "MIT"
-keywords = ["subcellular localisation", "machine learning", "dataset", "clustering", "classification", "natural language processing"]
+keywords = ["subcellular localisation", "machine learning", "dataset", "clustering", "classification", "protein language processing"]
 [project.urls]
 Homepage = "https://github.com/ousodaniel/scldata"
 Repository = "https://github.com/ousodaniel/scldata.git"

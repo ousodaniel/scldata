@@ -7,22 +7,21 @@ from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
-from src.scldata.loader import load
-from src.scldata import main, loader
+import scldata
+from scldata.loader import load
+from scldata import main, loader
 
 
 class TestScldataPkg(unittest.TestCase):
 
     def test_import_package(self):
-        from src import scldata
         self.assertTrue(hasattr(scldata, '__version__'))
 
     def test_import_submodule_load(self):
         self.assertTrue(callable(getattr(loader, 'load', None)))
 
     def test_import_submodule_main(self):
-        from src.scldata import __init__
-        self.assertTrue(callable(getattr(__init__, 'main', None)))
+        self.assertTrue(callable(getattr(scldata, 'main', None)))
 
     def test_load_kfold_input(self):
         self.assertRaises(ValueError, load, 5)
@@ -31,10 +30,6 @@ class TestScldataPkg(unittest.TestCase):
     def test_kfold_output_is_train_test(self):
         train_test = load('0')
         self.assertEqual(len(train_test), 2, 'Fold loading not returning train and test sets')
-
-    def test_main_returns_none(self):
-        from src.scldata import  main
-        self.assertIsNone(main(), 'Main function should return None')
 
     def test_main_output(self):
         with open('output.txt', 'w') as f:
@@ -81,7 +76,7 @@ class TestScldataCli(unittest.TestCase):
         self.assertEqual(expected_output.strip(), output.strip(), f'Expected 13 Classes:\n{expected_output}')
 
     def test_cli_execution(self):
-        script_path = self.project_root / 'scldata' / '__init__.py'
+        script_path = self.project_root / 'src' / 'scldata' / '__init__.py'
         result = subprocess.run(
             [sys.executable, script_path],
             stdout=subprocess.PIPE,
@@ -95,6 +90,19 @@ class TestScldataCli(unittest.TestCase):
     def test_invalid_option_arg(self):
         with self.assertRaises(SystemExit):
             main()
+
+    def test_piping_without_BrokenPipeError(self):
+        cmd = f'{sys.executable} -m scldata --info all --split heldout | head'
+        result = subprocess.run(
+            cmd,
+            shell=True,
+            capture_output=True,
+            text=True
+        )
+        self.assertEqual(result.returncode, 0, f'Script failed with stderr: {result.stderr}')
+        self.assertNotIn('BrokenPipeError', result.stderr, 'BrokenPipeError not handled')
+        self.assertNotIn('Traceback', result.stderr, 'Script crashed instead of exiting gracefully')
+
 
 if __name__ == '__main__':
     unittest.main()

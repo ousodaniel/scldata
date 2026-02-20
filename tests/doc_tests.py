@@ -1,5 +1,5 @@
 import doctest
-from src import scldata as sd
+import scldata as sd
 
 
 def main():

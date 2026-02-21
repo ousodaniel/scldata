@@ -26,7 +26,7 @@ def load(split: Union[str, int, None] = None, fasta: Optional[bool]=False) -> Un
     `split`: `str` | `int`, optional
     `fasta`: `bool`, optional
 
-    :param split: `str` or `int` or `None`. If `str`, it can be either of "full", "train", "valid", "heldout". Integers can be provided in string form.
+    :param split: `str` or `int` or `None`. If `str`, it can be either of "full", "train", "valid", "heldout" or "test". Integers can be provided in string form.
     :param fasta: `bool`, Whether to return a fasta file instead of a dataframe.
 
     Returns
@@ -45,6 +45,8 @@ def load(split: Union[str, int, None] = None, fasta: Optional[bool]=False) -> Un
         The part of SCL2205 used for model evaluation during training in the *train-valid-test* model development approach.
     heldout : str
         The part of SCL2205 used only for the **final** (internal) model testing.
+    test : str
+        Same as "heldout".
     k : int | str
         The value of the "split" param specifying a fold split of the SCL2205 dataset in the k-fold cross-validation model development approach. An integer string may be provided.
 
@@ -63,14 +65,14 @@ def load(split: Union[str, int, None] = None, fasta: Optional[bool]=False) -> Un
         return format_output(df_full.loc[[entries[str(idx)] for idx in splits['trn']]])
     elif split == 'valid':
         return format_output(df_full.loc[[entries[str(idx)] for idx in splits['vld']]])
-    elif split == 'heldout':
+    elif split == 'heldout' or split == 'test':
         return format_output(df_full.loc[[entries[str(idx)] for idx in splits['tst']]])
     elif (isinstance(split, int) or isinstance(int(split), int)) and int(split) in range(5):
         k = int(split)
         return (format_output(df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['trn']]]),
                 format_output(df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['vld']]]))
     else:
-        raise ValueError('split must be either None, "full", "train", "valid", "heldout" or an integer(-string) representing a k-fold split, eg. 0 0r "0"')
+        raise ValueError('split must be either None, "full", "train", "valid", "heldout", "test" or an integer(-string) representing a k-fold split, eg. 0 0r "0"')
 
 def main():
     pass

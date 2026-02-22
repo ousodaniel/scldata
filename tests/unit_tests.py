@@ -32,13 +32,10 @@ class TestScldataPkg(unittest.TestCase):
         train_test = load('0')
         self.assertEqual(len(train_test), 2, 'Fold loading not returning train and test sets')
 
-    def test_main_output(self):
-        with open('output.txt', 'w') as f:
-            with redirect_stdout(f):
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_main_output(self, mock_stdout):
+        with self.assertRaises(SystemExit):
                 main()
-        self.assertGreater(os.path.getsize('output.txt'), 0, 'Output file should not be empty')
-        if os.path.exists('output.txt'):
-            os.remove('output.txt')
 
     def tearDown(self):
         pass
@@ -50,7 +47,7 @@ class TestScldataCli(unittest.TestCase):
         self.script_path = self.project_root / 'src' / 'scldata' / '__init__.py'
         self.output_file = 'test-scldata-file-saving'
 
-    @patch('sys.argv', ['myscript.py', '--scls'])
+    @patch('sys.argv', ['myscript.py', '--scls', 'long'])
     def test_main_with_scls(self):
         self.scls = '\n'.join([
             'Membrane',
@@ -76,7 +73,7 @@ class TestScldataCli(unittest.TestCase):
         self.assertIn("SCL2205 Target Classes", output)
         self.assertIn("Membrane", output)
         expected_output = f'SCL2205 Target Classes:\n\n{self.scls}'
-        self.assertEqual(expected_output.strip(), output.strip(), f'Expected 13 Classes:\n{expected_output}')
+        self.assertEqual(expected_output.strip(), output.strip(), f'\n{expected_output} was expected.\n\n Not {output}')
 
     def test_cli_execution(self):
         result = subprocess.run(
@@ -86,7 +83,7 @@ class TestScldataCli(unittest.TestCase):
             text=True
         )
         self.assertEqual(result.returncode, 0, 'The script returned exit code 1, all was not ok')
-        self.assertIn('SCL2205 Full (Head):', result.stdout, 'The SCL2205 Full head output failed, should be printed when "scldata" command (script) is run without any arguments')
+        self.assertIn('usage: scldata [OPTIONS]', result.stdout, 'Usage info not printed')
 
     @patch('sys.stderr', new_callable=StringIO)  # Silence error messages
     @patch('sys.stdout', new_callable=StringIO)  # Silence standard prints
@@ -96,7 +93,7 @@ class TestScldataCli(unittest.TestCase):
             main()
 
     def test_piping_broken_pipe_error(self):
-        cmd = [sys.executable, '-u', self.script_path, '--info', 'all', '--split', 'heldout']
+        cmd = [sys.executable, '-u', self.script_path, '--split', 'heldout']
         process = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
@@ -115,7 +112,7 @@ class TestScldataCli(unittest.TestCase):
         self.assertNotIn('BrokenPipeError', stderr_data)
         self.assertNotIn('Traceback', stderr_data)
 
-    def test_fasta_output(self):
+    def test_fasta_std_output(self):
         cmd = [sys.executable, '-u', self.script_path, '-s', 'heldout', '-f', 'fasta']
 
         result = subprocess.run(
@@ -129,8 +126,8 @@ class TestScldataCli(unittest.TestCase):
         header_count = result.stdout.count('>')
         self.assertGreater(header_count, 0, 'No FASTA headers found in output')
 
-    def test_fasta_tv_default_output_is_10_seq(self):
-        cmd = [sys.executable, '-u', self.script_path, '-s', 'heldout', '-f', 'fasta']
+    def test_tsv_std_output(self):
+        cmd = [sys.executable, '-u', self.script_path, '-s', 'heldout', '-f', 'tsv']
 
         result = subprocess.run(
             cmd,
@@ -140,8 +137,36 @@ class TestScldataCli(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0)
 
-        header_count = result.stdout.count('>')
-        self.assertEqual(header_count, 10, 'Output is not 10 sequences')
+        header_count = result.stdout.count('\t')
+        self.assertGreater(header_count, 0, 'No TSV found in output')
+
+    def test_tsv_default_output(self):
+        cmd = [sys.executable, '-u', self.script_path, '-s', 'heldout']
+
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True
+        )
+
+        self.assertEqual(result.returncode, 0)
+
+        header_count = result.stdout.count('\t')
+        self.assertGreater(header_count, 0, 'Default TSV not produced')
+
+    def test_csv_std_output(self):
+        cmd = [sys.executable, '-u', self.script_path, '-s', 'heldout', '-f', 'csv']
+
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True
+        )
+
+        self.assertEqual(result.returncode, 0)
+
+        header_count = result.stdout.count(',')
+        self.assertGreater(header_count, 0, 'No CSV found in output')
 
     def test_fasta_file_output_written_tv_fasta(self):
         cmd = [sys.executable, '-u', self.script_path, '-s', 'heldout', '-f', 'fasta', '-o', self.output_file]

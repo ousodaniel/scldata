@@ -30,13 +30,19 @@ def seq_df_to_fasta_handle(df: pd.DataFrame, header_col: Optional[str]=None, des
     header_col = header_col.strip() if header_col else None
     description_col = description_col.strip() if description_col else None
 
-    # Format: >header desc\nseq\n
-    fasta_data = (
-            '>' + df.index.astype(str).str.strip().replace(r' +', '_', regex=True) if header_col is None else df[header_col].astype(str).str.strip().replace(r' +', '_', regex=True) +
-            f' {df[description_col].astype(str).str.strip() if description_col is None else ""}' +
-            '\n' + df[seq_col.strip()].astype(str).str.strip().upper() +
-            '\n'
-    )
+    # Format fasta: >header desc\nseq\n
+    if header_col is None:
+        header = df.index.map(str).str.strip().str.replace(r"\s+", "_", regex=True)
+    else:
+        header = df[header_col].astype(str).str.strip().replace(r'\s+', '_', regex=True)
+    if description_col is None:
+        description = ''
+    else:
+        description = ' ' + df[description_col].astype(str).str.strip()
+
+    seq = df[seq_col.strip()].astype(str).map(lambda x: x.upper()).str.strip()
+
+    fasta_data = '>' + header + description + '\n' + seq + '\n'
 
     # Combine all rows into a single string and write to buffer
     fasta_io.write(''.join(fasta_data))

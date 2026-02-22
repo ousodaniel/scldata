@@ -15,13 +15,15 @@ Motivated by the `F.A.I.R` principle.
 ```
 # Python
 >>> import scldata.loader as sdl # load pkg
->>> df_full = sdl.load() # default, the full dataset
+>>> data_struct = sdl.load() # default, the full dataset structure
 >>> df_train = sdl.load("train") # returns the training split
+>>> fasta_file = sdl.load('test', fasta=True) # returns a StringIO handle
 
 # CLI
-$ scldata # default, returns the first 5 records of the full dataset preceeded by a short descriptive line and the column and index names
-$ scdata --split train # similar as prevoius line but for the training  split
-$ scdata --split train --format full # returns the full training split preceeded by the three infomational lines
+$ scldata # default, returns the help page
+$ scldata --split train # similar as prevoius line but for the training  split
+$ scldata --split train --format fasta # returns the full training split in FASTA
+$ scldata --info struct # overview of the dataset
 $ scldata --help # for other options
 ```
 
@@ -51,10 +53,8 @@ scldata
      * `cv`: cross-validation (the 5-fold cross-validation dataset)
      * `fk`: fold `k`; ranges from zero to four
      * `trn`: training split
-     * `tst`:
-       * in `cv` is similar to the `vld` split
-       * at the top level, it is the `heldout` validation set
-     * `vld`: validation split (for monitoring training)
+     * `tst`: the `heldout` evaluation set
+     * `vld`: validation split (for monitoring training) _aka_ `development` or `discovery`
      * `[<int index>, ...]`: list of integer indices representing partition members
 5. **Classes:**
    1. Cytoplasm (`CYT`)
@@ -76,19 +76,19 @@ splits
 ├── cv
 │   ├── f0
 │   │   ├── trn = [<int index>, ...] # counts: 15187
-│   │   └── tst = [<int index>, ...] # counts: 1256
+│   │   └── vld = [<int index>, ...] # counts: 1256
 │   ├── f1
 │   │   ├── trn = [<int index>, ...] # counts: 15203
-│   │   └── tst = [<int index>, ...] # counts: 1240
+│   │   └── vld = [<int index>, ...] # counts: 1240
 │   ├── f2
 │   │   ├── trn = [<int index>, ...] # counts: 15185
-│   │   └── tst = [<int index>, ...] # counts: 1258
+│   │   └── vld = [<int index>, ...] # counts: 1258
 │   ├── f3
 │   │   ├── trn = [<int index>, ...] # counts: 15210
-│   │   └── tst = [<int index>, ...] # counts: 1233
+│   │   └── vld = [<int index>, ...] # counts: 1233
 │   └── f4
 │       ├── trn = [<int index>, ...] # counts: 15265
-│       └── tst = [<int index>, ...] # counts: 1178
+│       └── vld = [<int index>, ...] # counts: 1178
 ├── vld = [<int index>, ...] # counts: 15183
 ├── trn = [<int index>, ...] # counts: 1260
 └── tst = [<int index>, ...] # counts: 2631

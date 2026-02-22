@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - FASTA output feature
 - Help with no options provided
 - Variations for the target logging: long-and-abbr, abbr, and long
+- File output-saving param
+- Option to display summary data structure
 
 ### Changed
 - Project structure: moved package into src
@@ -19,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Removed
+- Default dumping of the full dataset when CLI is run without any options
 
 ### Fixed
 - Data fold range in the README from 0 -> 5 to 0 -> 4 and other small updates

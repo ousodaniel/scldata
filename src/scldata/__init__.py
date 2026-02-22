@@ -193,33 +193,29 @@ def main():
         out_manager_scl = OutputManager(
             f'{args.output}-targets-{args.scls}.txt' if args.output != '-' else args.output)
         scls = load().scl.drop_duplicates()
+        scl = scls + ' (' + scls.replace(label_abbr_dict) + ')'
         if args.scls == 'long':
             scl = scls
         elif args.scls == 'short':
             scl =scls.replace(label_abbr_dict)
         elif args.scls == 'full':
             scl = scls + ' (' + scls.replace(label_abbr_dict) + ')'
-
         joiner = '\n'
         output(out_manager_scl, f'SCL2205 Target Classes:\n\n{joiner.join(scl)}')
+
     elif args.split and args.info is None:
         if args.split not in ('0', '1', '2', '3', '4'):
             print(f'SCL2205 {args.split.capitalize()}:\n\n')
             output(out_manager, load(args.split, form), args.format)
         else:
             print(f'SCL2205 Fold-{args.split} Train-Valid:\n\n')
-            # output(out_manager2, (load(args.split, form)[0], load(args.split, form)[1]), args.format)
-            head_out1 = load(args.split, form)[0] #if args.format == 'fasta' else load(args.split, form)[0]
-            head_out2 = load(args.split, form)[1] #if args.format == 'fasta' else load(args.split, form)[1]
+            head_out1 = load(args.split, form)[0]
+            head_out2 = load(args.split, form)[1]
             output(out_manager2, (head_out1, head_out2), args.format)
+
     elif args.info == 'struct':
         output(out_manager,splits_str)
-        # if args.split not in ('0', '1', '2', '3', '4'):
-        #     print(f'SCL2205 {args.split.capitalize()}:\n\n')
-        #     output(out_manager, load(args.split, form), args.format)
-        # else:
-        #     print(f'SCL2205 Fold-{args.split} Train-Valid:\n\n')
-        #     output(out_manager2, (load(args.split, form)[0], load(args.split, form)[1]), args.format)
+
     elif args.info == 'head' and args.split:
         if args.split not in ('0', '1', '2', '3', '4'):
             print(f'SCL2205 {args.split.capitalize()} (Head):\n\n')
@@ -230,6 +226,7 @@ def main():
             head_out1 = StringIO(''.join(map(str,load(args.split, form)[0].readlines()[:20]))) if args.format == 'fasta'  else load(args.split)[0].head()
             head_out2 = StringIO(''.join(map(str,load(args.split, form)[1].readlines()[:20]))) if args.format == 'fasta'  else load(args.split)[1].head()
             output(out_manager2, (head_out1, head_out2), args.format)
+
     elif args.info == 'shape' and args.split:
         if args.split not in ('0', '1', '2', '3', '4'):
             output(out_manager,f'SCL2205 {args.split.capitalize()} Shape:\n{load(args.split).shape}\n\n')

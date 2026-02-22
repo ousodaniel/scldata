@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ---
 
+## [Release] - YYYY-MM-DD
+### Added
+- FASTA output feature
+- Help with no options provided
+- Variations for the target logging: long-and-abbr, abbr, and long
+
+### Changed
+- Project structure: moved package into src
+- Refactored the development data partition naming from evaluation (evl/eval) to validation (vld/valid)
+
+### Deprecated
+
+### Removed
+
+### Fixed
+- Data fold range in the README from 0 -> 5 to 0 -> 4 and other small updates
+
+### Security
+
+---
+
 ## [2025.6.0] - 2025-07-10
 ### Added
 - Installation instructions and example usage to the README

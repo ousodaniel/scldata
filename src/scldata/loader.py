@@ -5,6 +5,7 @@ from pathlib import Path
 from pandas import DataFrame
 
 from scldata.utils.fasta_utils import seq_df_to_fasta_handle
+from scldata.utils.scldata_summary import splits_str
 
 _DATA_DIR = Path(__file__).parent/'data'
 
@@ -17,7 +18,9 @@ with open(f'{_DATA_DIR}/splits.json', 'r') as f:
 with open(f'{_DATA_DIR}/entries.json', 'r') as f:
     entries = json.load(f)
 
-def load(split: Union[str, int, None] = None, fasta: Optional[bool]=False) -> Union[DataFrame, TextIO, Tuple[Union[DataFrame, TextIO], Union[DataFrame, TextIO]]]:
+df_full = pd.read_csv(f'{_DATA_DIR}/scl2205.csv', index_col='entry')
+
+def load(split: Union[str, int, None] = None, fasta: Optional[bool]=False) -> Union[str, DataFrame, TextIO, Tuple[Union[DataFrame, TextIO], Union[DataFrame, TextIO]]]:
     """
     A function for loading the full or split SCL2205 dataset.
 
@@ -52,14 +55,14 @@ def load(split: Union[str, int, None] = None, fasta: Optional[bool]=False) -> Un
 
     """
 
-    df_full = pd.read_csv(f'{_DATA_DIR}/scl2205.csv', index_col='entry')
-
     def format_output(df: pd.DataFrame) -> Union[pd.DataFrame,TextIO]:
         label_map = {int(k): v for k, v in labels['index_to_label'].items()}
         df = df.replace(label_map)
         return seq_df_to_fasta_handle(df, description_col='scl', seq_col='seq') if fasta else df
 
-    if split is None or split == 'full':
+    if split is None:
+        return splits_str
+    elif split == 'full':
         return format_output(df_full)
     elif split == 'train':
         return format_output(df_full.loc[[entries[str(idx)] for idx in splits['trn']]])

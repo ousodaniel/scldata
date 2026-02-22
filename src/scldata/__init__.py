@@ -3,7 +3,7 @@
     Its use cases include clustering and classification machine learning, and contain dataset tracks for the *train-valid-test* and *cross-validation-test* (`k` = 5) model development approaches.
     Preprocessing is already done, including homology reduction within and across corresponding splits.
 
-    The package also has a command line interface with additional capabilities: use the command `scldata`. Without any options, it prints out an equivalent of `DataFrame.head()`.
+    The package also has a command line interface with additional capabilities: use the command `scldata`. Without any options, it prints out the help.
 
     Descriptions
     ------------
@@ -22,7 +22,7 @@
     >>> df_valid = sdl.load('valid')
     >>> fasta_test_handle = sdl.load('test', fasta=True)
     >>> df_heldout = sdl.load('heldout') # "test" and "heldout" are interchangeable
-    >>> df_kfold0 = sdl.load(0) # returns a tuple of dataframes with training and testing sets at index 0 and 1, respectively
+    >>> df_kfold0 = sdl.load(0) # returns a tuple of dataframes with training and validation sets at index 0 and 1, respectively
     >>> df_kfold1_train = sdl.load('1')[0]
 
     .. note:: The SCL2205 dataset was curated from `UniProtKB`_, the latest release as of 24/01/2023. The indices are persistent identifiers consistent with *UniProtKB entry* identifier.
@@ -57,7 +57,7 @@ def output(out_manager: OutputManager, out: Union[str, DataFrame, TextIO, Tuple[
     `fformat`: `str`
 
     :param out_manager: `OutputManager`, The output manager object.
-    :param out: `Union[str, DataFrame, TextIO, Tuple[Union[DataFrame, TextIO]`, The output manager object.
+    :param out: `Union[str, DataFrame, TextIO, Tuple[Union[DataFrame, TextIO]`, Object to be dumped by the output manager.
     :param fformat: `str`, The output file format, default None.
 
     Returns
@@ -100,7 +100,7 @@ def output(out_manager: OutputManager, out: Union[str, DataFrame, TextIO, Tuple[
 
 def main():
     parser = argparse.ArgumentParser(prog='scldata',
-                                     description='SCL2205 dataset loading to standard output. With no OPTION(s), outputs the HEAD of the full SCL2205 dataset.',
+                                     description='SCL2205 dataset loading to standard output. With no OPTION(s), outputs help.',
                                      usage='%(prog)s [OPTIONS]\nusage: %(prog)s [-h] [-s SPLIT] [-i INFO] [--scls] [--version] [-f FORMAT] [-o OUTPUT]\n\nFor more information, try "-h/--help".',
                                      epilog=(
                                          '\n'
@@ -134,21 +134,21 @@ def main():
         type=str,
         default=None,
         choices=['train', 'valid', 'heldout', 'test', 'full', '0', '1', '2', '3', '4'],
-        help='print which split to load: "train", "valid", "heldout", "test", "full", or k-fold ("0"-"4") (default: None).'
+        help='which split to load: "train", "valid", "heldout", "test", "full", or k-fold ("0"-"4") (default: None).'
     )
     parser.add_argument(
         '-i', '--info',
         type=str,
         choices=['head', 'shape', 'struct'],
         default='head',
-        help='print info: "head", "shape", or "struct" (default: "head")'
+        help='info: "head", "shape", or "struct" (default: "head")'
     )
     parser.add_argument(
         '-c', '--scls',
         type=str,
         choices=['full', 'long', 'short'],
         default=None,
-        help='print scls target classes: "full", "long", "short" (default: None)'
+        help='scls target classes: "full", "long", "short" (default: None)'
     )
     parser.add_argument(
         '-v', '--version',
@@ -160,13 +160,13 @@ def main():
         type=str,
         choices=['tsv', 'csv', 'fasta'],
         default='tsv',
-        help='print output format: "tsv", "csv", or "fasta" (default: "tsv")',
+        help='output format: "tsv", "csv", or "fasta" (default: "tsv")',
     )
     parser.add_argument(
         '-o', '--output',
         type=str,
         default='-',
-        help='print output file prefix (default: stdout)'
+        help='output file prefix (default: stdout)'
     )
 
     if len(sys.argv) == 1:

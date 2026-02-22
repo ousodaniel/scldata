@@ -20,3 +20,19 @@ splits
 ├── trn = [<int index>, ...] # counts: 1260
 └── tst = [<int index>, ...] # counts: 2631
 """
+
+label_abbr_dict = {
+'Cytoplasm': 'CYT',
+'Plastid': 'PLA',
+'Secreted': 'SEC',
+'Mitochondrion': 'MIT',
+'Membrane': 'MEM',
+'Peroxisome': 'PER',
+'Nucleus': 'NUC',
+'Cell projection': 'CEP',
+'ER': 'ER',
+'Cytoplasm;Nucleus': 'CYT;NUC',
+'Centrosome;Cytoplasm;Cytoskeleton;Microtubule organizing center': 'CEN;CYT;CYTS;MTOC',
+'Cytoplasm;Membrane': 'CYT;MEM',
+'Cytoplasm;Cytoskeleton': 'CYT;CYTS',
+}

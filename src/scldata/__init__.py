@@ -17,7 +17,8 @@
     --------
     >>> import scldata as sdl
     >>> df_full = sdl.load('full')
-    >>> df_full = sdl.load()
+    >>> struct_file = sdl.load()
+    >>> label_map = sdl.load_label_encoding()
     >>> df_train = sdl.load('train')
     >>> df_valid = sdl.load('valid')
     >>> fasta_test_handle = sdl.load('test', fasta=True)
@@ -38,7 +39,7 @@ from pandas import DataFrame
 from importlib.metadata import version
 from typing import TextIO, Tuple, Union
 
-from scldata.loader import load
+from scldata.loader import load, load_label_encoding
 from scldata.utils.io_utils import OutputManager
 
 __version__ = version('p-scldata')
@@ -139,7 +140,7 @@ def main():
     parser.add_argument(
         '-i', '--info',
         type=str,
-        choices=['head', 'shape', 'struct'],
+        choices=['head', 'shape', 'struct', 'label_enc'],
         default='head',
         help='info: "head", "shape", or "struct" (default: "head")'
     )
@@ -215,6 +216,9 @@ def main():
 
     elif args.info == 'struct':
         output(out_manager,splits_str)
+
+    elif args.info == 'label_enc':
+        output(out_manager, load_label_encoding())
 
     elif args.info == 'head' and args.split:
         if args.split not in ('0', '1', '2', '3', '4'):

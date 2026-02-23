@@ -76,6 +76,8 @@ def load(split: Union[str, int, None] = None, fasta: Optional[bool]=False) -> Un
                 format_output(df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['vld']]]))
     else:
         raise ValueError('split must be either None, "full", "train", "valid", "heldout", "test" or an integer(-string) representing a k-fold split, eg. 0 0r "0"')
+def load_label_encoding() -> str:
+    return str(json.dumps(labels, indent=2))
 
 def main():
     pass

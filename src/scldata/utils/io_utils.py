@@ -9,27 +9,27 @@ class OutputManager:
 
     def __init__(self, paths: Union[str, Sequence[str]]):
         """
-            Init handles for stdout or files.
+        Init handles for stdout or files.
 
-            Parameters
-            ----------
-            `paths`: `str` | `Sequence[str]`
+        Parameters
+        ----------
+        `paths`: `str` | `Sequence[str]`
 
-            :param: paths: `str` | `Sequence[str]`, Path to output file(s).
+        :param: paths: `str` | `Sequence[str]`, Path to output file(s).
 
-            Returns
-            -------
-            `self`
+        Returns
+        -------
+        `self`
 
-            :return: Class instance
+        :return: Class instance
 
-            """
+        """
         self.paths = [paths] if isinstance(paths, str) else paths
         self.handles: List[TextIO] = []
 
     def __repr__(self) -> str:
         # Returns a string like: OutputManager(paths=['-', 'results.fasta'])
-        return f'{self.__class__.__name__}(paths={self.paths!r})'
+        return f"{self.__class__.__name__}(paths={self.paths!r})"
 
     def __len__(self) -> int:
         """Returns the number of paths this manager is responsible for."""
@@ -46,10 +46,10 @@ class OutputManager:
         self.handles = []
 
         for path in self.paths:
-            if path == '-':
+            if path == "-":
                 self.handles.append(sys.stdout)
             else:
-                self.handles.append(open(path, 'w', encoding='utf-8'))
+                self.handles.append(open(path, "w", encoding="utf-8"))
 
         return self.handles[0] if len(self.handles) == 1 else self.handles
 

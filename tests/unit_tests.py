@@ -13,56 +13,59 @@ from scldata import main, loader
 
 
 class TestScldataPkg(unittest.TestCase):
-
     def test_import_package(self):
-        self.assertTrue(hasattr(scldata, '__version__'))
+        self.assertTrue(hasattr(scldata, "__version__"))
 
     def test_import_submodule_load(self):
-        self.assertTrue(callable(getattr(loader, 'load', None)))
+        self.assertTrue(callable(getattr(loader, "load", None)))
 
     def test_import_submodule_main(self):
-        self.assertTrue(callable(getattr(scldata, 'main', None)))
+        self.assertTrue(callable(getattr(scldata, "main", None)))
 
     def test_load_kfold_input(self):
         self.assertRaises(ValueError, load, 5)
         self.assertRaises(ValueError, load, -5)
 
     def test_kfold_output_is_train_test(self):
-        train_test = load('0')
-        self.assertEqual(len(train_test), 2, 'Fold loading not returning train and test sets')
+        train_test = load("0")
+        self.assertEqual(
+            len(train_test), 2, "Fold loading not returning train and test sets"
+        )
 
-    @patch('sys.stdout', new_callable=StringIO)
+    @patch("sys.stdout", new_callable=StringIO)
     def test_main_output(self, mock_stdout):
         with self.assertRaises(SystemExit):
-                main()
+            main()
 
     def tearDown(self):
         pass
 
-class TestScldataCli(unittest.TestCase):
 
+class TestScldataCli(unittest.TestCase):
     def setUp(self):
         self.project_root = Path(__file__).resolve().parents[1]
-        self.script_path = self.project_root / 'src' / 'scldata' / '__init__.py'
-        self.output_file = 'test-scldata-file-saving'
+        self.script_path = self.project_root / "src" / "scldata" / "__init__.py"
+        self.output_file = "test-scldata-file-saving"
 
-    @patch('sys.argv', ['myscript.py', '--scls', 'long'])
+    @patch("sys.argv", ["myscript.py", "--scls", "long"])
     def test_main_with_scls(self):
-        self.scls = '\n'.join([
-            'Membrane',
-            'Cytoplasm',
-            'Nucleus',
-            'ER',
-            'Secreted',
-            'Plastid',
-            'Cytoplasm;Nucleus',
-            'Centrosome;Cytoplasm;Cytoskeleton;Microtubule organizing center',
-            'Cytoplasm;Membrane',
-            'Mitochondrion',
-            'Cell projection',
-            'Cytoplasm;Cytoskeleton',
-            'Peroxisome'
-        ])
+        self.scls = "\n".join(
+            [
+                "Membrane",
+                "Cytoplasm",
+                "Nucleus",
+                "ER",
+                "Secreted",
+                "Plastid",
+                "Cytoplasm;Nucleus",
+                "Centrosome;Cytoplasm;Cytoskeleton;Microtubule organizing center",
+                "Cytoplasm;Membrane",
+                "Mitochondrion",
+                "Cell projection",
+                "Cytoplasm;Cytoskeleton",
+                "Peroxisome",
+            ]
+        )
 
         buffer = StringIO()
         with redirect_stdout(buffer):
@@ -71,33 +74,38 @@ class TestScldataCli(unittest.TestCase):
         output = buffer.getvalue()
         self.assertIn("SCL2205 Target Classes", output)
         self.assertIn("Membrane", output)
-        expected_output = f'SCL2205 Target Classes:\n\n{self.scls}'
-        self.assertEqual(expected_output.strip(), output.strip(), f'\n{expected_output} was expected.\n\n Not {output}')
+        expected_output = f"SCL2205 Target Classes:\n\n{self.scls}"
+        self.assertEqual(
+            expected_output.strip(),
+            output.strip(),
+            f"\n{expected_output} was expected.\n\n Not {output}",
+        )
 
     def test_cli_execution(self):
         result = subprocess.run(
             [sys.executable, self.script_path],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            text=True
+            text=True,
         )
-        self.assertEqual(result.returncode, 0, 'The script returned exit code 1, all was not ok')
-        self.assertIn('usage: scldata [OPTIONS]', result.stdout, 'Usage info not printed')
+        self.assertEqual(
+            result.returncode, 0, "The script returned exit code 1, all was not ok"
+        )
+        self.assertIn(
+            "usage: scldata [OPTIONS]", result.stdout, "Usage info not printed"
+        )
 
-    @patch('sys.stderr', new_callable=StringIO)  # Silence error messages
-    @patch('sys.stdout', new_callable=StringIO)  # Silence standard prints
-    @patch('sys.argv', ['myscript.py', '--split', 'dev'])
+    @patch("sys.stderr", new_callable=StringIO)  # Silence error messages
+    @patch("sys.stdout", new_callable=StringIO)  # Silence standard prints
+    @patch("sys.argv", ["myscript.py", "--split", "dev"])
     def test_invalid_option_arg(self, mock_stdout, mock_stderr):
         with self.assertRaises(SystemExit):
             main()
 
     def test_piping_broken_pipe_error(self):
-        cmd = [sys.executable, '-u', self.script_path, '--split', 'heldout']
+        cmd = [sys.executable, "-u", self.script_path, "--split", "heldout"]
         process = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
         )
 
         try:
@@ -107,167 +115,247 @@ class TestScldataCli(unittest.TestCase):
         finally:
             _, stderr_data = process.communicate()
 
-        self.assertEqual(process.returncode, 0, f"Script failed with stderr: {stderr_data}")
-        self.assertNotIn('BrokenPipeError', stderr_data)
-        self.assertNotIn('Traceback', stderr_data)
+        self.assertEqual(
+            process.returncode, 0, f"Script failed with stderr: {stderr_data}"
+        )
+        self.assertNotIn("BrokenPipeError", stderr_data)
+        self.assertNotIn("Traceback", stderr_data)
 
     def test_fasta_std_output(self):
-        cmd = [sys.executable, '-u', self.script_path, '-s', 'heldout', '-f', 'fasta']
+        cmd = [sys.executable, "-u", self.script_path, "-s", "heldout", "-f", "fasta"]
 
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True)
 
         self.assertEqual(result.returncode, 0)
 
-        header_count = result.stdout.count('>')
-        self.assertGreater(header_count, 0, 'No FASTA headers found in output')
+        header_count = result.stdout.count(">")
+        self.assertGreater(header_count, 0, "No FASTA headers found in output")
 
     def test_tsv_std_output(self):
-        cmd = [sys.executable, '-u', self.script_path, '-s', 'heldout', '-f', 'tsv']
+        cmd = [sys.executable, "-u", self.script_path, "-s", "heldout", "-f", "tsv"]
 
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True)
 
         self.assertEqual(result.returncode, 0)
 
-        header_count = result.stdout.count('\t')
-        self.assertGreater(header_count, 0, 'No TSV found in output')
+        header_count = result.stdout.count("\t")
+        self.assertGreater(header_count, 0, "No TSV found in output")
 
     def test_tsv_default_output(self):
-        cmd = [sys.executable, '-u', self.script_path, '-s', 'heldout']
+        cmd = [sys.executable, "-u", self.script_path, "-s", "heldout"]
 
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True)
 
         self.assertEqual(result.returncode, 0)
 
-        header_count = result.stdout.count('\t')
-        self.assertGreater(header_count, 0, 'Default TSV not produced')
+        header_count = result.stdout.count("\t")
+        self.assertGreater(header_count, 0, "Default TSV not produced")
 
     def test_csv_std_output(self):
-        cmd = [sys.executable, '-u', self.script_path, '-s', 'heldout', '-f', 'csv']
+        cmd = [sys.executable, "-u", self.script_path, "-s", "heldout", "-f", "csv"]
 
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True)
 
         self.assertEqual(result.returncode, 0)
 
-        header_count = result.stdout.count(',')
-        self.assertGreater(header_count, 0, 'No CSV found in output')
+        header_count = result.stdout.count(",")
+        self.assertGreater(header_count, 0, "No CSV found in output")
 
     def test_fasta_file_output_written_tv_fasta(self):
-        cmd = [sys.executable, '-u', self.script_path, '-s', 'heldout', '-f', 'fasta', '-o', self.output_file]
+        cmd = [
+            sys.executable,
+            "-u",
+            self.script_path,
+            "-s",
+            "heldout",
+            "-f",
+            "fasta",
+            "-o",
+            self.output_file,
+        ]
 
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True)
 
         self.assertEqual(result.returncode, 0)
 
-        self.assertTrue(Path(f'{self.output_file}-heldout-head.fasta').exists(), f'File "{self.output_file}-heldout-head.fasta" was not created.')
-        self.assertGreater(Path(f'{self.output_file}-heldout-head.fasta').stat().st_size, 0, f'File "{self.output_file}-heldout-head.fasta" was created but is empty.')
+        self.assertTrue(
+            Path(f"{self.output_file}-heldout-head.fasta").exists(),
+            f'File "{self.output_file}-heldout-head.fasta" was not created.',
+        )
+        self.assertGreater(
+            Path(f"{self.output_file}-heldout-head.fasta").stat().st_size,
+            0,
+            f'File "{self.output_file}-heldout-head.fasta" was created but is empty.',
+        )
 
     def test_fasta_file_output_written_cv_fasta(self):
-        cmd = [sys.executable, '-u', self.script_path, '-s', '0', '-f', 'fasta', '-o', self.output_file]
+        cmd = [
+            sys.executable,
+            "-u",
+            self.script_path,
+            "-s",
+            "0",
+            "-f",
+            "fasta",
+            "-o",
+            self.output_file,
+        ]
 
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True)
 
         self.assertEqual(result.returncode, 0)
 
-        self.assertTrue(Path(f'{self.output_file}-cv-0-train-head.fasta').exists(), f'File "{self.output_file}-cv-0-train-head.fasta" was not created.')
-        self.assertTrue(Path(f'{self.output_file}-cv-0-valid-head.fasta').exists(),
-                        f'File "{self.output_file}-cv-0-valid-head.fasta" was not created.')
-        self.assertGreater(Path(f'{self.output_file}-cv-0-train-head.fasta').stat().st_size, 0, f'File "{self.output_file}-cv-0-train-head.fasta" was created but is empty.')
+        self.assertTrue(
+            Path(f"{self.output_file}-cv-0-train-head.fasta").exists(),
+            f'File "{self.output_file}-cv-0-train-head.fasta" was not created.',
+        )
+        self.assertTrue(
+            Path(f"{self.output_file}-cv-0-valid-head.fasta").exists(),
+            f'File "{self.output_file}-cv-0-valid-head.fasta" was not created.',
+        )
         self.assertGreater(
-            Path(f'{self.output_file}-cv-0-valid-head.fasta').stat().st_size, 0, f'File "{self.output_file}-cv-0-valid-head.fasta" was created but is empty.')
+            Path(f"{self.output_file}-cv-0-train-head.fasta").stat().st_size,
+            0,
+            f'File "{self.output_file}-cv-0-train-head.fasta" was created but is empty.',
+        )
+        self.assertGreater(
+            Path(f"{self.output_file}-cv-0-valid-head.fasta").stat().st_size,
+            0,
+            f'File "{self.output_file}-cv-0-valid-head.fasta" was created but is empty.',
+        )
 
     def test_fasta_file_output_written_tv_tsv(self):
-        cmd = [sys.executable, '-u', self.script_path, '-s', 'heldout', '-f', 'tsv', '-o', self.output_file]
+        cmd = [
+            sys.executable,
+            "-u",
+            self.script_path,
+            "-s",
+            "heldout",
+            "-f",
+            "tsv",
+            "-o",
+            self.output_file,
+        ]
 
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True)
 
         self.assertEqual(result.returncode, 0)
 
-        self.assertTrue(Path(f'{self.output_file}-heldout-head.tsv').exists(), f'File "{self.output_file}-heldout-head.tsv" was not created.')
-        self.assertGreater(Path(f'{self.output_file}-heldout-head.tsv').stat().st_size, 0, f'File "{self.output_file}-heldout-head.tsv" was created but is empty.')
+        self.assertTrue(
+            Path(f"{self.output_file}-heldout-head.tsv").exists(),
+            f'File "{self.output_file}-heldout-head.tsv" was not created.',
+        )
+        self.assertGreater(
+            Path(f"{self.output_file}-heldout-head.tsv").stat().st_size,
+            0,
+            f'File "{self.output_file}-heldout-head.tsv" was created but is empty.',
+        )
 
     def test_fasta_file_output_written_cv_tsv(self):
-        cmd = [sys.executable, '-u', self.script_path, '-s', '0', '-f', 'tsv', '-o', self.output_file]
+        cmd = [
+            sys.executable,
+            "-u",
+            self.script_path,
+            "-s",
+            "0",
+            "-f",
+            "tsv",
+            "-o",
+            self.output_file,
+        ]
 
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True)
 
         self.assertEqual(result.returncode, 0)
 
-        self.assertTrue(Path(f'{self.output_file}-cv-0-train-head.tsv').exists(), f'File "{self.output_file}-cv-0-train-head.tsv" was not created.')
-        self.assertTrue(Path(f'{self.output_file}-cv-0-valid-head.tsv').exists(),
-                        f'File "{self.output_file}-cv-0-valid-head.tsv" was not created.')
-        self.assertGreater(Path(f'{self.output_file}-cv-0-train-head.tsv').stat().st_size, 0, f'File "{self.output_file}-cv-0-train-head.tsv" was created but is empty.')
+        self.assertTrue(
+            Path(f"{self.output_file}-cv-0-train-head.tsv").exists(),
+            f'File "{self.output_file}-cv-0-train-head.tsv" was not created.',
+        )
+        self.assertTrue(
+            Path(f"{self.output_file}-cv-0-valid-head.tsv").exists(),
+            f'File "{self.output_file}-cv-0-valid-head.tsv" was not created.',
+        )
         self.assertGreater(
-            Path(f'{self.output_file}-cv-0-valid-head.tsv').stat().st_size, 0, f'File "{self.output_file}-cv-0-valid-head.tsv" was created but is empty.')
+            Path(f"{self.output_file}-cv-0-train-head.tsv").stat().st_size,
+            0,
+            f'File "{self.output_file}-cv-0-train-head.tsv" was created but is empty.',
+        )
+        self.assertGreater(
+            Path(f"{self.output_file}-cv-0-valid-head.tsv").stat().st_size,
+            0,
+            f'File "{self.output_file}-cv-0-valid-head.tsv" was created but is empty.',
+        )
 
     def test_fasta_file_output_written_tv_csv(self):
-        cmd = [sys.executable, '-u', self.script_path, '-s', 'heldout', '-f', 'csv', '-o', self.output_file]
+        cmd = [
+            sys.executable,
+            "-u",
+            self.script_path,
+            "-s",
+            "heldout",
+            "-f",
+            "csv",
+            "-o",
+            self.output_file,
+        ]
 
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True)
 
         self.assertEqual(result.returncode, 0)
 
-        self.assertTrue(Path(f'{self.output_file}-heldout-head.csv').exists(), f'File "{self.output_file}-heldout-head.csv" was not created.')
-        self.assertGreater(Path(f'{self.output_file}-heldout-head.csv').stat().st_size, 0, f'File "{self.output_file}-heldout-head.csv" was created but is empty.')
+        self.assertTrue(
+            Path(f"{self.output_file}-heldout-head.csv").exists(),
+            f'File "{self.output_file}-heldout-head.csv" was not created.',
+        )
+        self.assertGreater(
+            Path(f"{self.output_file}-heldout-head.csv").stat().st_size,
+            0,
+            f'File "{self.output_file}-heldout-head.csv" was created but is empty.',
+        )
 
     def test_fasta_file_output_written_cv_csv(self):
-        cmd = [sys.executable, '-u', self.script_path, '-s', '0', '-f', 'csv', '-o', self.output_file]
+        cmd = [
+            sys.executable,
+            "-u",
+            self.script_path,
+            "-s",
+            "0",
+            "-f",
+            "csv",
+            "-o",
+            self.output_file,
+        ]
 
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True)
 
         self.assertEqual(result.returncode, 0)
 
-        self.assertTrue(Path(f'{self.output_file}-cv-0-train-head.csv').exists(), f'File "{self.output_file}-cv-0-train-head.csv" was not created.')
-        self.assertTrue(Path(f'{self.output_file}-cv-0-valid-head.csv').exists(),
-                        f'File "{self.output_file}-cv-0-valid-head.csv" was not created.')
-        self.assertGreater(Path(f'{self.output_file}-cv-0-train-head.csv').stat().st_size, 0, f'File "{self.output_file}-cv-0-train-head.csv" was created but is empty.')
+        self.assertTrue(
+            Path(f"{self.output_file}-cv-0-train-head.csv").exists(),
+            f'File "{self.output_file}-cv-0-train-head.csv" was not created.',
+        )
+        self.assertTrue(
+            Path(f"{self.output_file}-cv-0-valid-head.csv").exists(),
+            f'File "{self.output_file}-cv-0-valid-head.csv" was not created.',
+        )
         self.assertGreater(
-            Path(f'{self.output_file}-cv-0-valid-head.csv').stat().st_size, 0, f'File "{self.output_file}-cv-0-valid-head.csv" was created but is empty.')
+            Path(f"{self.output_file}-cv-0-train-head.csv").stat().st_size,
+            0,
+            f'File "{self.output_file}-cv-0-train-head.csv" was created but is empty.',
+        )
+        self.assertGreater(
+            Path(f"{self.output_file}-cv-0-valid-head.csv").stat().st_size,
+            0,
+            f'File "{self.output_file}-cv-0-valid-head.csv" was created but is empty.',
+        )
 
     def tearDown(self):
-        directory = Path('.')
-        patterns = [f'{self.output_file}-*', 'test-scldata-saving*']
+        directory = Path(".")
+        patterns = [f"{self.output_file}-*", "test-scldata-saving*"]
         for file in chain(*(directory.glob(p) for p in patterns)):
             file.unlink(missing_ok=True)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

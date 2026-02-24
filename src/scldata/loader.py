@@ -7,20 +7,25 @@ from pandas import DataFrame
 from scldata.utils.fasta_utils import seq_df_to_fasta_handle
 from scldata.utils.scldata_summary import splits_str
 
-_DATA_DIR = Path(__file__).parent/'data'
+_DATA_DIR = Path(__file__).parent / "data"
 
-with open(f'{_DATA_DIR}/labels.json', 'r') as f:
+with open(f"{_DATA_DIR}/labels.json", "r") as f:
     labels = json.load(f)
 
-with open(f'{_DATA_DIR}/splits.json', 'r') as f:
+with open(f"{_DATA_DIR}/splits.json", "r") as f:
     splits = json.load(f)
 
-with open(f'{_DATA_DIR}/entries.json', 'r') as f:
+with open(f"{_DATA_DIR}/entries.json", "r") as f:
     entries = json.load(f)
 
-df_full = pd.read_csv(f'{_DATA_DIR}/scl2205.csv', index_col='entry')
+df_full = pd.read_csv(f"{_DATA_DIR}/scl2205.csv", index_col="entry")
 
-def load(split: Union[str, int, None] = None, fasta: Optional[bool]=False) -> Union[str, DataFrame, TextIO, Tuple[Union[DataFrame, TextIO], Union[DataFrame, TextIO]]]:
+
+def load(
+    split: Union[str, int, None] = None, fasta: Optional[bool] = False
+) -> Union[
+    str, DataFrame, TextIO, Tuple[Union[DataFrame, TextIO], Union[DataFrame, TextIO]]
+]:
     """
     A function for loading the full or split SCL2205 dataset.
 
@@ -55,32 +60,50 @@ def load(split: Union[str, int, None] = None, fasta: Optional[bool]=False) -> Un
 
     """
 
-    def format_output(df: pd.DataFrame) -> Union[pd.DataFrame,TextIO]:
-        label_map = {int(k): v for k, v in labels['index_to_label'].items()}
+    def format_output(df: pd.DataFrame) -> Union[pd.DataFrame, TextIO]:
+        label_map = {int(k): v for k, v in labels["index_to_label"].items()}
         df = df.replace(label_map)
-        return seq_df_to_fasta_handle(df, description_col='scl', seq_col='seq') if fasta else df
+        return (
+            seq_df_to_fasta_handle(df, description_col="scl", seq_col="seq")
+            if fasta
+            else df
+        )
 
     if split is None:
         return splits_str
-    elif split == 'full':
+    elif split == "full":
         return format_output(df_full)
-    elif split == 'train':
-        return format_output(df_full.loc[[entries[str(idx)] for idx in splits['trn']]])
-    elif split == 'valid':
-        return format_output(df_full.loc[[entries[str(idx)] for idx in splits['vld']]])
-    elif split == 'heldout' or split == 'test':
-        return format_output(df_full.loc[[entries[str(idx)] for idx in splits['tst']]])
-    elif (isinstance(split, int) or isinstance(int(split), int)) and int(split) in range(5):
+    elif split == "train":
+        return format_output(df_full.loc[[entries[str(idx)] for idx in splits["trn"]]])
+    elif split == "valid":
+        return format_output(df_full.loc[[entries[str(idx)] for idx in splits["vld"]]])
+    elif split == "heldout" or split == "test":
+        return format_output(df_full.loc[[entries[str(idx)] for idx in splits["tst"]]])
+    elif (isinstance(split, int) or isinstance(int(split), int)) and int(
+        split
+    ) in range(5):
         k = int(split)
-        return (format_output(df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['trn']]]),
-                format_output(df_full.loc[[entries[str(idx)] for idx in splits['cv'][f'f{k}']['vld']]]))
+        return (
+            format_output(
+                df_full.loc[[entries[str(idx)] for idx in splits["cv"][f"f{k}"]["trn"]]]
+            ),
+            format_output(
+                df_full.loc[[entries[str(idx)] for idx in splits["cv"][f"f{k}"]["vld"]]]
+            ),
+        )
     else:
-        raise ValueError('split must be either None, "full", "train", "valid", "heldout", "test" or an integer(-string) representing a k-fold split, eg. 0 0r "0"')
+        raise ValueError(
+            'split must be either None, "full", "train", "valid", "heldout", "test" or an integer(-string) representing a k-fold split, eg. 0 0r "0"'
+        )
+
+
 def load_label_encoding() -> str:
     return str(json.dumps(labels, indent=2))
+
 
 def main():
     pass
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

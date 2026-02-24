@@ -3,7 +3,12 @@ from io import StringIO
 from typing import TextIO, Optional
 
 
-def seq_df_to_fasta_handle(df: pd.DataFrame, header_col: Optional[str]=None, description_col: Optional[str]=None, seq_col: str= 'seq') -> TextIO:
+def seq_df_to_fasta_handle(
+    df: pd.DataFrame,
+    header_col: Optional[str] = None,
+    description_col: Optional[str] = None,
+    seq_col: str = "seq",
+) -> TextIO:
     """
     Convert a pandas sequence DataFrame to a FASTA-formatted StringIO handle.
 
@@ -34,18 +39,18 @@ def seq_df_to_fasta_handle(df: pd.DataFrame, header_col: Optional[str]=None, des
     if header_col is None:
         header = df.index.map(str).str.strip().str.replace(r"\s+", "_", regex=True)
     else:
-        header = df[header_col].astype(str).str.strip().replace(r'\s+', '_', regex=True)
+        header = df[header_col].astype(str).str.strip().replace(r"\s+", "_", regex=True)
     if description_col is None:
-        description = ''
+        description = ""
     else:
-        description = ' ' + df[description_col].astype(str).str.strip()
+        description = " " + df[description_col].astype(str).str.strip()
 
     seq = df[seq_col.strip()].astype(str).map(lambda x: x.upper()).str.strip()
 
-    fasta_data = '>' + header + description + '\n' + seq + '\n'
+    fasta_data = ">" + header + description + "\n" + seq + "\n"
 
     # Combine all rows into a single string and write to buffer
-    fasta_io.write(''.join(fasta_data))
+    fasta_io.write("".join(fasta_data))
 
     # Reset pointer to the beginning for the caller to read
     fasta_io.seek(0)
@@ -55,11 +60,8 @@ def seq_df_to_fasta_handle(df: pd.DataFrame, header_col: Optional[str]=None, des
 
 if __name__ == "__main__":
     # Quick example usage
-    data = {
-        'scl': ['Cytoplasm', 'Nucleus'],
-        'seq': ['MAGA', 'MTYPR']
-    }
-    test_df = pd.DataFrame(data, index=['prot_1', 'prot_2'])
+    data = {"scl": ["Cytoplasm", "Nucleus"], "seq": ["MAGA", "MTYPR"]}
+    test_df = pd.DataFrame(data, index=["prot_1", "prot_2"])
 
     handle = seq_df_to_fasta_handle(test_df)
     print(handle.read())

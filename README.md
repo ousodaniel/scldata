@@ -1,4 +1,12 @@
 # SCL2205: Subcellular Localisation Dataset
+
+[![Test Suite](https://github.com/ousodaniel/scldata/actions/workflows/test.yaml/badge.svg)](https://github.com/ousodaniel/scldata/actions/workflows/test.yaml)
+[![PyPI version](https://badge.fury.io/py/p-scldata.svg)](https://badge.fury.io/py/p-scldata)
+[![Python versions](https://img.shields.io/pypi/pyversions/p-scldata.svg)](https://pypi.org/project/p-scldata/)
+[![codecov](https://codecov.io/gh/ousodaniel/scldata/branch/main/graph/badge.svg)](https://codecov.io/gh/ousodaniel/scldata)
+![Data](https://img.shields.io/badge/Data-Sub--cellular%20Localisation-blue?style=for-the-badge&logo=moleculer&logoColor=blue)
+![Data Type](https://img.shields.io/badge/Protein%20Sequence-green?style=for-the-badge&logo=moleculer&logoColor=green)
+
 An installable dataset package for subcellular localisation prediction modelling.
 It is suitable for clustering, classification, and generative protein language machine learning, and comprises dataset tracks for the `train-valid-test` and `cross-validation-test` (`k = 5`) model development approaches.
 Preprocessing is already done, including homology reduction within and across corresponding splits.

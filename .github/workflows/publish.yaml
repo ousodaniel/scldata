@@ -1,0 +1,145 @@
+name: Publish to PyPI
+
+# Trigger only when a release is published
+on:
+  release:
+    types: [published]
+  # Allow manual trigger for testing
+  workflow_dispatch:
+
+# Restrict permissions for security
+permissions:
+  contents: read
+
+jobs:
+  # Job 1: Build the distribution files
+  build:
+    name: Build distribution packages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Install build tools
+      - name: Install build dependencies
+        run: |
+          uv pip install --system build hatchling
+        # build: Package for building Python packages
+        # hatchling: Your build backend
+
+      # Build wheel and sdist
+      - name: Build package
+        run: |
+          python -m build
+        # Creates dist/ directory with .whl and .tar.gz files
+
+      # Verify the build
+      - name: List built packages
+        run: |
+          ls -lh dist/
+
+      # Check package metadata
+      - name: Check package with twine
+        run: |
+          uv pip install --system twine
+          twine check dist/*
+        # Validates that your package will upload correctly
+
+      # Save the built packages for the next job
+      - name: Store distribution packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+          retention-days: 7  # Keep artifacts for 7 days
+
+  # Job 2: Publish to TestPyPI (for testing)
+  publish-to-testpypi:
+    name: Publish to TestPyPI
+    needs: [build]  # Wait for build job to complete
+    runs-on: ubuntu-latest
+
+    # Only run on manual trigger
+    if: github.event_name == 'workflow_dispatch' && contains(github.event.release.tag_name, '-beta')
+
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/p-scldata
+
+    permissions:
+      id-token: write  # Required for trusted publishing
+
+    steps:
+      # Download the built packages from the build job
+      - name: Download distribution packages
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      # Publish to TestPyPI
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
+        # Uses trusted publishing (no API token needed!)
+
+  # Job 3: Publish to PyPI (production)
+  publish-to-pypi:
+    name: Publish to PyPI
+    needs: [build]
+    runs-on: ubuntu-latest
+
+    # Only run on actual releases, not manual triggers
+    if: github.event_name == 'release' && endsWith(github.event.release.tag_name, '-stable')
+
+    environment:
+      name: pypi
+      url: https://pypi.org/p/p-scldata
+
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Download distribution packages
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        # Automatically publishes all files in dist/
+
+  # Job 4: Create GitHub Release assets (optional)
+  upload-to-release:
+    name: Upload packages to GitHub Release
+    needs: [build, publish-to-pypi]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+
+    permissions:
+      contents: write  # Required to upload release assets
+
+    steps:
+      - name: Download distribution packages
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Upload packages to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
+        # Attaches your .whl and .tar.gz files to the GitHub release

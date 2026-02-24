@@ -1,5 +1,5 @@
 import sys
-from typing import List, Union, TextIO, Optional, Sequence
+from typing import List, Union, TextIO, Sequence
 
 
 class OutputManager:

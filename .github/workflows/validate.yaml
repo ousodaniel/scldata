@@ -1,0 +1,48 @@
+name: Validate
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Quick validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      # Check that pyproject.toml is valid
+      - name: Validate pyproject.toml
+        run: |
+          uv pip install --system validate-pyproject
+          validate-pyproject pyproject.toml
+
+      # Check that version in pyproject.toml follows semantic versioning
+      - name: Check version format
+        run: |
+          VERSION=$(grep -oP 'version = "\K[^"]+' pyproject.toml)
+          echo "Version: $VERSION"
+          # Basic check for semantic versioning pattern
+          if [[ ! $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+(-(a|alpha|b|beta|rc|p|post|d|dev)[.-]?[0-9]+)?$ ]]; then
+            echo "Warning: Version doesn't follow semantic versioning (x.y.z)"
+          fi
+
+      # Ensure all required files exist
+      - name: Check required files
+        run: |
+          test -f README.md || (echo "README.md missing" && exit 1)
+          test -f LICENSE || (echo "LICENSE missing" && exit 1)
+          test -f CHANGELOG.md || (echo "CHANGELOG.md missing" && exit 1)
+          test -f pyproject.toml || (echo "pyproject.toml missing" && exit 1)

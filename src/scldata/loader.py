@@ -62,7 +62,7 @@ def load(
 
     def format_output(df: pd.DataFrame) -> Union[pd.DataFrame, TextIO]:
         label_map = {int(k): v for k, v in labels["index_to_label"].items()}
-        df = df.replace(label_map)
+        df = df.assign(scl=df.scl.map(label_map))
         return (
             seq_df_to_fasta_handle(df, description_col="scl", seq_col="seq")
             if fasta

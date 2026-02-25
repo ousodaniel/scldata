@@ -26,7 +26,7 @@ jobs:
       # Check that pyproject.toml is valid
       - name: Validate pyproject.toml
         run: |
-          uv pip install --system validate-pyproject
+          uv pip install --system 'validate-pyproject[all]' 'packaging>=24.2'
           validate-pyproject pyproject.toml
 
       # Check that version in pyproject.toml follows semantic versioning

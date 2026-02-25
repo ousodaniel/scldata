@@ -56,7 +56,7 @@ jobs:
         # .[dev,test]: Install with dev and test extras
 
       # Step 5: Run tests with unittest
-      - name: Run tests
+      - name: Run unittests
         run: |
           python -m unittest discover -s tests -p "*tests.py" -v
         # -s tests: Start directory for discovery
@@ -64,35 +64,48 @@ jobs:
         # -v: Verbose output
 
       # Step 6: Run tests with coverage (optional but recommended)
-      - name: Run tests with coverage
+      - name: Run unittests with coverage
         run: |
           uv pip install --system coverage
           coverage run -m unittest discover -s tests -p "*tests.py"
           coverage report -m
-          coverage xml
-        # Creates coverage.xml for code coverage reporting
+          coverage xml -o coverage-unittest.xml
+        # Creates coverage-unittest.xml for code coverage reporting
 
       # Step 7: Upload coverage to Codecov (optional)
-      - name: Upload coverage to Codecov
+      - name: Upload unittest coverage to Codecov
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         uses: codecov/codecov-action@v4
         with:
-          file: ./coverage.xml
+          file: ./coverage-unittest.xml
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: false
         # Only upload from one matrix combination to avoid duplicates
 
-      # Step 8: Upload test results to Codecov (optional)
-      - name: Upload test results to Codecov
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12' && ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          file: ./junit.xml
-          flags: unittests
-          name: codecov-tests
-          fail_ci_if_error: false
+      # Step 8: Run tests with doctest
+      - name: Run doctests
+        run: |
+          python -m doctest tests/doc_*.py -v
 
+      # Step 9: Run doctests with coverage (separate file)
+      - name: Run doctests with coverage
+        run: |
+        # Generate separate coverage for doctests
+          coverage run -m doctest tests/doc_*.py
+          coverage report -m
+          coverage xml -o coverage-doctest.xml
+
+      # Step 10: Upload doctest coverage to Codecov (optional)
+      - name: Upload doctest coverage to Codecov
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage-doctest.xml
+          flags: doctests
+          name: codecov-doc
+          fail_ci_if_error: false
+        # Only upload from one matrix combination to avoid duplicates
 
   lint:
     name: Code Quality Checks

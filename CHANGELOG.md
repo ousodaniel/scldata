@@ -9,11 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Release] - YYYY-MM-DD
 ### Added
 - FASTA output feature
+- CI/CD workflow
 - Help with no options provided
 - Variations for the target logging: long-and-abbr, abbr, and long
 - File output-saving param
 - Option to display summary data structure
-- Align label encoding to related paper
+- Align label encoding to related paper's label encoding
 - Binarised multi-label "label_to_index_multi" encoding
 
 ### Changed

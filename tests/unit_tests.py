@@ -179,13 +179,13 @@ class TestScldataCli(unittest.TestCase):
         self.assertEqual(result.returncode, 0)
 
         self.assertTrue(
-            Path(f"{self.output_file}-heldout-head.fasta").exists(),
-            f'File "{self.output_file}-heldout-head.fasta" was not created.',
+            Path(f"{self.output_file}-heldout.fasta").exists(),
+            f'File "{self.output_file}-heldout.fasta" was not created.',
         )
         self.assertGreater(
-            Path(f"{self.output_file}-heldout-head.fasta").stat().st_size,
+            Path(f"{self.output_file}-heldout.fasta").stat().st_size,
             0,
-            f'File "{self.output_file}-heldout-head.fasta" was created but is empty.',
+            f'File "{self.output_file}-heldout.fasta" was created but is empty.',
         )
 
     def test_fasta_file_output_written_cv_fasta(self):
@@ -206,22 +206,22 @@ class TestScldataCli(unittest.TestCase):
         self.assertEqual(result.returncode, 0)
 
         self.assertTrue(
-            Path(f"{self.output_file}-cv-0-train-head.fasta").exists(),
-            f'File "{self.output_file}-cv-0-train-head.fasta" was not created.',
+            Path(f"{self.output_file}-cv-0-train.fasta").exists(),
+            f'File "{self.output_file}-cv-0-train.fasta" was not created.',
         )
         self.assertTrue(
-            Path(f"{self.output_file}-cv-0-valid-head.fasta").exists(),
-            f'File "{self.output_file}-cv-0-valid-head.fasta" was not created.',
+            Path(f"{self.output_file}-cv-0-valid.fasta").exists(),
+            f'File "{self.output_file}-cv-0-valid.fasta" was not created.',
         )
         self.assertGreater(
-            Path(f"{self.output_file}-cv-0-train-head.fasta").stat().st_size,
+            Path(f"{self.output_file}-cv-0-train.fasta").stat().st_size,
             0,
-            f'File "{self.output_file}-cv-0-train-head.fasta" was created but is empty.',
+            f'File "{self.output_file}-cv-0-train.fasta" was created but is empty.',
         )
         self.assertGreater(
-            Path(f"{self.output_file}-cv-0-valid-head.fasta").stat().st_size,
+            Path(f"{self.output_file}-cv-0-valid.fasta").stat().st_size,
             0,
-            f'File "{self.output_file}-cv-0-valid-head.fasta" was created but is empty.',
+            f'File "{self.output_file}-cv-0-valid.fasta" was created but is empty.',
         )
 
     def test_fasta_file_output_written_tv_tsv(self):
@@ -242,13 +242,13 @@ class TestScldataCli(unittest.TestCase):
         self.assertEqual(result.returncode, 0)
 
         self.assertTrue(
-            Path(f"{self.output_file}-heldout-head.tsv").exists(),
-            f'File "{self.output_file}-heldout-head.tsv" was not created.',
+            Path(f"{self.output_file}-heldout.tsv").exists(),
+            f'File "{self.output_file}-heldout.tsv" was not created.',
         )
         self.assertGreater(
-            Path(f"{self.output_file}-heldout-head.tsv").stat().st_size,
+            Path(f"{self.output_file}-heldout.tsv").stat().st_size,
             0,
-            f'File "{self.output_file}-heldout-head.tsv" was created but is empty.',
+            f'File "{self.output_file}-heldout.tsv" was created but is empty.',
         )
 
     def test_fasta_file_output_written_cv_tsv(self):
@@ -269,22 +269,22 @@ class TestScldataCli(unittest.TestCase):
         self.assertEqual(result.returncode, 0)
 
         self.assertTrue(
-            Path(f"{self.output_file}-cv-0-train-head.tsv").exists(),
-            f'File "{self.output_file}-cv-0-train-head.tsv" was not created.',
+            Path(f"{self.output_file}-cv-0-train.tsv").exists(),
+            f'File "{self.output_file}-cv-0-train.tsv" was not created.',
         )
         self.assertTrue(
-            Path(f"{self.output_file}-cv-0-valid-head.tsv").exists(),
-            f'File "{self.output_file}-cv-0-valid-head.tsv" was not created.',
+            Path(f"{self.output_file}-cv-0-valid.tsv").exists(),
+            f'File "{self.output_file}-cv-0-valid.tsv" was not created.',
         )
         self.assertGreater(
-            Path(f"{self.output_file}-cv-0-train-head.tsv").stat().st_size,
+            Path(f"{self.output_file}-cv-0-train.tsv").stat().st_size,
             0,
-            f'File "{self.output_file}-cv-0-train-head.tsv" was created but is empty.',
+            f'File "{self.output_file}-cv-0-train.tsv" was created but is empty.',
         )
         self.assertGreater(
-            Path(f"{self.output_file}-cv-0-valid-head.tsv").stat().st_size,
+            Path(f"{self.output_file}-cv-0-valid.tsv").stat().st_size,
             0,
-            f'File "{self.output_file}-cv-0-valid-head.tsv" was created but is empty.',
+            f'File "{self.output_file}-cv-0-valid.tsv" was created but is empty.',
         )
 
     def test_fasta_file_output_written_tv_csv(self):
@@ -305,13 +305,13 @@ class TestScldataCli(unittest.TestCase):
         self.assertEqual(result.returncode, 0)
 
         self.assertTrue(
-            Path(f"{self.output_file}-heldout-head.csv").exists(),
-            f'File "{self.output_file}-heldout-head.csv" was not created.',
+            Path(f"{self.output_file}-heldout.csv").exists(),
+            f'File "{self.output_file}-heldout.csv" was not created.',
         )
         self.assertGreater(
-            Path(f"{self.output_file}-heldout-head.csv").stat().st_size,
+            Path(f"{self.output_file}-heldout.csv").stat().st_size,
             0,
-            f'File "{self.output_file}-heldout-head.csv" was created but is empty.',
+            f'File "{self.output_file}-heldout.csv" was created but is empty.',
         )
 
     def test_fasta_file_output_written_cv_csv(self):
@@ -332,22 +332,22 @@ class TestScldataCli(unittest.TestCase):
         self.assertEqual(result.returncode, 0)
 
         self.assertTrue(
-            Path(f"{self.output_file}-cv-0-train-head.csv").exists(),
-            f'File "{self.output_file}-cv-0-train-head.csv" was not created.',
+            Path(f"{self.output_file}-cv-0-train.csv").exists(),
+            f'File "{self.output_file}-cv-0-train.csv" was not created.',
         )
         self.assertTrue(
-            Path(f"{self.output_file}-cv-0-valid-head.csv").exists(),
-            f'File "{self.output_file}-cv-0-valid-head.csv" was not created.',
+            Path(f"{self.output_file}-cv-0-valid.csv").exists(),
+            f'File "{self.output_file}-cv-0-valid.csv" was not created.',
         )
         self.assertGreater(
-            Path(f"{self.output_file}-cv-0-train-head.csv").stat().st_size,
+            Path(f"{self.output_file}-cv-0-train.csv").stat().st_size,
             0,
-            f'File "{self.output_file}-cv-0-train-head.csv" was created but is empty.',
+            f'File "{self.output_file}-cv-0-train.csv" was created but is empty.',
         )
         self.assertGreater(
-            Path(f"{self.output_file}-cv-0-valid-head.csv").stat().st_size,
+            Path(f"{self.output_file}-cv-0-valid.csv").stat().st_size,
             0,
-            f'File "{self.output_file}-cv-0-valid-head.csv" was created but is empty.',
+            f'File "{self.output_file}-cv-0-valid.csv" was created but is empty.',
         )
 
     def tearDown(self):

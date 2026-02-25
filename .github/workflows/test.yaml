@@ -86,13 +86,13 @@ jobs:
       # Step 8: Run tests with doctest
       - name: Run doctests
         run: |
-          python -m doctest tests/doc_*.py -v
+          python -m doctest tests/doc_tests.py -v
 
       # Step 9: Run doctests with coverage (separate file)
       - name: Run doctests with coverage
         run: |
           # Generate separate coverage for doctests
-          coverage run -m doctest tests/doc_*.py
+          coverage run -m doctest tests/doc_tests.py
           coverage report -m
           coverage xml -o coverage-doctest.xml
 

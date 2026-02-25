@@ -156,7 +156,7 @@ def main():
         "--info",
         type=str,
         choices=["head", "shape", "struct", "label_enc"],
-        default="head",
+        default=None,
         help='info: "head", "shape", or "struct" (default: "head")',
     )
     parser.add_argument(
@@ -210,17 +210,19 @@ def main():
 
     args = parser.parse_args()
 
+    info = f"-{args.info}" if args.info else ""
+
     out_manager = OutputManager(
-        f"{args.output}-{args.split}-{args.info}.{args.format}"
+        f"{args.output}-{args.split}{info}.{args.format}"
         if args.output != "-"
         else args.output
     )
     out_manager2 = OutputManager(
         [
-            f"{args.output}-cv-{args.split}-train-{args.info}.{args.format}"
+            f"{args.output}-cv-{args.split}-train{info}.{args.format}"
             if args.output != "-"
             else args.output,
-            f"{args.output}-cv-{args.split}-valid-{args.info}.{args.format}"
+            f"{args.output}-cv-{args.split}-valid{info}.{args.format}"
             if args.output != "-"
             else args.output,
         ]
@@ -234,18 +236,19 @@ def main():
             if args.output != "-"
             else args.output
         )
-        scls = load().scl.drop_duplicates()
-        scl = scls + " (" + scls.replace(label_abbr_dict) + ")"
+        scls = load("full").scl.drop_duplicates()
+        scl = scls + " (" + scls.map(label_abbr_dict) + ")"
         if args.scls == "long":
             scl = scls
         elif args.scls == "short":
-            scl = scls.replace(label_abbr_dict)
+            scl = scls.map(label_abbr_dict)
         elif args.scls == "full":
-            scl = scls + " (" + scls.replace(label_abbr_dict) + ")"
+            scl = scls + " (" + scls.map(label_abbr_dict) + ")"
         joiner = "\n"
-        output(out_manager_scl, f"SCL2205 Target Classes:\n\n{joiner.join(scl)}")
+        output(out_manager_scl, f"SCL2205 Target Classes:\n\n{joiner.join(scl)}\n")
 
-    elif args.split and args.info is None:
+    elif args.split:
+        args.info = None
         if args.split not in ("0", "1", "2", "3", "4"):
             print(f"SCL2205 {args.split.capitalize()}:\n\n")
             output(out_manager, load(args.split, form), args.format)

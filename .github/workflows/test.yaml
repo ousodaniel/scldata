@@ -83,6 +83,17 @@ jobs:
           fail_ci_if_error: false
         # Only upload from one matrix combination to avoid duplicates
 
+      # Step 8: Upload test results to Codecov (optional)
+      - name: Upload test results to Codecov
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12' && ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          file: ./junit.xml
+          flags: unittests
+          name: codecov-tests
+          fail_ci_if_error: false
+
+
   lint:
     name: Code Quality Checks
     runs-on: ubuntu-latest

@@ -102,6 +102,7 @@ class TestScldataCli(unittest.TestCase):
         with self.assertRaises(SystemExit):
             main()
 
+    @unittest.skipIf(sys.platform == "win32", "Windows")
     def test_piping_broken_pipe_error(self):
         cmd = [sys.executable, "-u", self.script_path, "--split", "heldout"]
         process = subprocess.Popen(

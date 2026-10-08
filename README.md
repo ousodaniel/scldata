@@ -4,9 +4,9 @@
 [![PyPI version](https://badge.fury.io/py/p-scldata.svg)](https://badge.fury.io/py/p-scldata)
 [![Python versions](https://img.shields.io/pypi/pyversions/p-scldata.svg)](https://pypi.org/project/p-scldata/)
 [![codecov](https://codecov.io/gh/ousodaniel/scldata/branch/main/graph/badge.svg)](https://codecov.io/gh/ousodaniel/scldata)
+[![Downloads](https://static.pepy.tech/badge/p-scldata)](https://pepy.tech/project/p-scldata)
 ![Data](https://img.shields.io/badge/Data-Sub--cellular%20Localisation-blue?style=for-the-badge&logo=moleculer&logoColor=blue)
 ![Mol Type](https://img.shields.io/badge/Mol--type-Protein%20Sequence-green?style=for-the-badge&logo=moleculer&logoColor=green)
-[![Downloads](https://static.pepy.tech/badge/p-scldata)](https://pepy.tech/project/p-scldata)
 
 An installable dataset package for subcellular localisation prediction modelling.
 It is suitable for clustering, classification, and generative protein language machine learning, and comprises dataset tracks for the `train-valid-test` and `cross-validation-test` (`k = 5`) model development approaches.

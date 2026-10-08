@@ -6,6 +6,7 @@
 [![codecov](https://codecov.io/gh/ousodaniel/scldata/branch/main/graph/badge.svg)](https://codecov.io/gh/ousodaniel/scldata)
 ![Data](https://img.shields.io/badge/Data-Sub--cellular%20Localisation-blue?style=for-the-badge&logo=moleculer&logoColor=blue)
 ![Mol Type](https://img.shields.io/badge/Mol--type-Protein%20Sequence-green?style=for-the-badge&logo=moleculer&logoColor=green)
+[![Downloads](https://static.pepy.tech/badge/p-scldata)](https://pepy.tech/project/p-scldata)
 
 An installable dataset package for subcellular localisation prediction modelling.
 It is suitable for clustering, classification, and generative protein language machine learning, and comprises dataset tracks for the `train-valid-test` and `cross-validation-test` (`k = 5`) model development approaches.
@@ -29,7 +30,7 @@ Motivated by the `F.A.I.R` principle.
 
 # CLI
 $ scldata # default, returns the help page
-$ scldata --split train # return training  split in deafault .tsv format
+$ scldata --split train # return training  split in default .tsv format
 $ scldata --split train --format fasta # returns the full training split in FASTA
 $ scldata --info struct # overview of the dataset
 $ scldata --help # for other options
@@ -97,8 +98,8 @@ splits
 │   └── f4
 │       ├── trn = [<int index>, ...] # counts: 15265
 │       └── vld = [<int index>, ...] # counts: 1178
-├── vld = [<int index>, ...] # counts: 15183
-├── trn = [<int index>, ...] # counts: 1260
+├── trn = [<int index>, ...] # counts: 15183
+├── vld = [<int index>, ...] # counts: 1260
 └── tst = [<int index>, ...] # counts: 2631
 ```
 
@@ -114,8 +115,8 @@ An open-source Python package for the data, `p-scldata`, is available on the off
 
 Other publicly accessible locations of the raw data:
 
-* DRYAD: [Coming...]()
-* Zenodo: [Coming...]()
+* DRYAD: [https://datadryad.org/dataset/doi:10.5061/dryad.2ngf1vj1t](https://datadryad.org/dataset/doi:10.5061/dryad.2ngf1vj1t)
+* Zenodo: [https://doi.org/10.5281/zenodo.21796423](https://doi.org/10.5281/zenodo.21796423)
 * Hugging Face: [Coming...]()
 
 Data was derived from the following sources:
